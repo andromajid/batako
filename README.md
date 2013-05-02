@@ -1,0 +1,4 @@
+skripsi
+=======
+
+tempat skripsi

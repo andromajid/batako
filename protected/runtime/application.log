@@ -1,0 +1,15 @@
+2013/03/13 19:41:38 [error] [system.db.CDbCommand] Error in preparing SQL: SELECT COUNT(*)
+FROM 'sys_stock_network_mid'
+2013/03/13 19:41:38 [error] [system.db.CDbCommand] CDbCommand::fetchColumn() failed: CDbCommand failed to prepare the SQL statement: SQLSTATE[HY000]: General error: 1 no such table: sys_stock_network_mid. The SQL statement executed was: SELECT COUNT(*)
+FROM 'sys_stock_network_mid'.
+2013/03/13 19:41:38 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: CDbCommand failed to prepare the SQL statement: SQLSTATE[HY000]: General error: 1 no such table: sys_stock_network_mid. The SQL statement executed was: SELECT COUNT(*)
+FROM 'sys_stock_network_mid'' in H:\website\freelance\arkasoftv3\arkasoftv3\framework\db\CDbCommand.php:528
+Stack trace:
+#0 H:\website\freelance\arkasoftv3\arkasoftv3\framework\db\CDbCommand.php(425): CDbCommand->queryInternal('fetchColumn', 0, Array)
+#1 H:\website\freelance\arkasoftv3\arkasoftv3\protected\commands\StocknetworkmidCommand.php(16): CDbCommand->queryScalar()
+#2 H:\website\freelance\arkasoftv3\arkasoftv3\framework\console\CConsoleCommandRunner.php(68): StocknetworkmidCommand->run(Array)
+#3 H:\website\freelance\arkasoftv3\arkasoftv3\framework\console\CConsoleApplication.php(92): CConsoleCommandRunner->run(Array)
+#4 H:\website\freelance\arkasoftv3\arkasoftv3\framework\base\CApplication.php(162): CConsoleApplication->processRequest()
+#5 H:\website\freelance\arkasoftv3\arkasoftv3\cli.php(11): CApplication->run()
+#6 {main}
+---

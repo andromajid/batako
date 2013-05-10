@@ -43,7 +43,7 @@
 
     <div class="row">
         <?php echo $form->labelEx($model, 'user_is_administrator'); ?>
-        <?php echo $form->textField($model, 'user_is_administrator', array('size' => 1, 'maxlength' => 1)); ?>
+        <?php echo $form->checkBox($model, 'user_is_administrator') ?>
     </div>
 
     <div class="row">
@@ -53,7 +53,7 @@
 
     <div class="row">
         <?php echo $form->labelEx($model, 'user_role_user_role_id'); ?>
-        <?php echo $form->textField($model, 'user_role_user_role_id'); ?>
+        <?php echo $form->dropDownList($model,'user_role_user_role_id', CHtml::listData(user_role::model()->findAll('user_role_is_active=\'1\''), 'user_role_id', 'user_role_name'), array('empty'=>'select Type')); ?>
     </div>
 
     <div class="row buttons">

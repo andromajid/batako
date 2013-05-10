@@ -9,27 +9,34 @@ class UserController extends adminController {
     public $layout = '//layouts/column2';
 
     /**
+     * Displays a particular model.
+     * @param integer $id the ID of the model to be displayed
+     */
+    public function actionView($id) {
+        $this->render('view', array(
+            'model' => $this->loadModel($id),
+        ));
+    }
+
+    /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        $model = new SiteAdministrator;
-        $group_admin = SiteAdministratorGroup::model()->getAllGroupAdmin();
+        $this->title = 'create User';
+        $model = new user;
+
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
-        if (isset($_POST['SiteAdministrator'])) {
-            $model->attributes = $_POST['SiteAdministrator'];
-            $model->admin_password = md5($model->admin_password);
-            if ($model->save()) {
-                Yii::app()->user->setFlash('success', 'data admin berhasil ditambah');
-                $this->redirect('index');
-            }
+        if (isset($_POST['user'])) {
+            $model->attributes = $_POST['user'];
+            if ($model->save())
+                $this->redirect(array('view', 'id' => $model->user_id));
         }
 
         $this->render('create', array(
             'model' => $model,
-            'group_admin' => $group_admin,
         ));
     }
 
@@ -40,19 +47,18 @@ class UserController extends adminController {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-        $group_admin = SiteAdministratorGroup::model()->getAllGroupAdmin();
+
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
-        if (isset($_POST['SiteAdministrator'])) {
-            $model->attributes = $_POST['SiteAdministrator'];
+        if (isset($_POST['user'])) {
+            $model->attributes = $_POST['user'];
             if ($model->save())
-                $this->redirect(array('view', 'id' => $model->admin_id));
+                $this->redirect(array('view', 'id' => $model->user_id));
         }
 
         $this->render('update', array(
             'model' => $model,
-            'group_admin' => $group_admin,
         ));
     }
 
@@ -70,13 +76,23 @@ class UserController extends adminController {
     }
 
     /**
-     * Manages all models.
+     * Lists all models.
      */
     public function actionIndex() {
-        $model = new SiteAdministrator('search');
+        $dataProvider = new CActiveDataProvider('user');
+        $this->render('index', array(
+            'dataProvider' => $dataProvider,
+        ));
+    }
+
+    /**
+     * Manages all models.
+     */
+    public function actionAdmin() {
+        $model = new user('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['SiteAdministrator']))
-            $model->attributes = $_GET['SiteAdministrator'];
+        if (isset($_GET['user']))
+            $model->attributes = $_GET['user'];
 
         $this->render('admin', array(
             'model' => $model,
@@ -89,74 +105,10 @@ class UserController extends adminController {
      * @param integer the ID of the model to be loaded
      */
     public function loadModel($id) {
-        $model = SiteAdministrator::model()->findByPk($id);
+        $model = user::model()->findByPk($id);
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
         return $model;
-    }
-
-    public function actionRight($id) {
-        if (isset($_POST['update'])) {
-            //pertama delete semua menu dari group ini 
-            Yii::app()->db->createCommand()->delete('site_con_action_prev', 'con_action_prev_admin_group_id=:group_id', array(':group_id' => $id));
-            if (is_array($_POST['user_right'])) {
-                foreach ($_POST['user_right'] as $row_number => $menu_id) {
-                    Yii::app()->db->createCommand()->insert('site_con_action_prev', array('con_action_prev_admin_group_id' => $id,
-                        'con_action_prev_con_action_id' => $menu_id));
-                }
-                Yii::app()->user->setFlash('success', 'data berhasil di perbaharui');
-            }
-        }
-        Yii::import('application.extensions.Metadata');
-        $meta = new Metadata();
-        $data = $meta->getAll();
-
-//        if (isset($data['controllers'])) {
-//            foreach ($data['controllers'] as $row_controller) {
-//                //chek apakah sudah dimasukkan ke table
-//                $cont_name = strtolower(str_replace('Controller', '', $row_controller['name']));
-//                //grab_action-nya
-//                foreach ($row_controller['actions'] as $row_action) {
-//                    $con_action_name = strtolower($cont_name . '.' . $row_action);
-//                    $cek = dbHelper::getOne('con_action_id', 'site_controller_action', 'con_action_data = \'' . $con_action_name . '\'');
-//                    if ($cek == '')
-//                        Yii::app()->db->createCommand()->insert('site_controller_action', array('con_action_data' => $con_action_name));
-//                }
-//            }
-//        }
-        //buat modulenya
-        if (isset($data['modules'])) {
-            foreach ($data['modules'] as $data_module) {
-                $module_name = $data_module['name'];
-                foreach ($data_module['controllers'] as $row_module_data) {
-                    $cont_name = strtolower(str_replace('Controller', '', $row_module_data['name']));
-                    //grab_action-nya
-                    foreach ($row_module_data['actions'] as $row_action) {
-                        $con_action_name = strtolower($module_name . '.' . $cont_name . '.' . $row_action);
-                        $cek = dbHelper::getOne('con_action_id', 'site_controller_action', 'con_action_data = \'' . $con_action_name . '\'');
-                        if ($cek == '')
-                            Yii::app()->db->createCommand()->insert('site_controller_action', array('con_action_data' => $con_action_name));
-                    }
-                }
-            }
-        }
-        $model = Yii::app()->db->createCommand()->select()->from('site_controller_action')->order('con_action_data ASC')->queryAll();
-        $model_right = Yii::app()->db->createCommand()->select()->from('site_con_action_prev')->where('con_action_prev_admin_group_id=:con_id', array(':con_id' => $id))->queryAll();
-        if (is_array($model_right)) {
-            foreach ($model_right as $row_right) {
-                $data_right[] = $row_right['con_action_prev_con_action_id'];
-            }
-        } else
-            $data_right = array();
-        $data_tree = array();
-        if (isset($model)) {
-            foreach ($model as $row_model) {
-                $data_tree[] = array('title' => $row_model['con_action_data'],
-                    'id' => $row_model['con_action_id'],
-                    'select' => @in_array($row_model['con_action_id'], $data_right) ? TRUE : FALSE,);
-            }
-        }
-        $this->render('right', array('model' => $data_tree));
     }
 
     /**
@@ -164,7 +116,7 @@ class UserController extends adminController {
      * @param CModel the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && $_POST['ajax'] === 'site-administrator-form') {
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }

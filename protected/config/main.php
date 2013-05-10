@@ -17,7 +17,6 @@ return array(
         'application.models.*',
         'application.components.*',
         'application.helper.*',
-        'application.extensions.mlm.MlmHelper',
     ),
     'modules' => array(
         // uncomment the following to enable the Gii tool
@@ -37,30 +36,6 @@ return array(
         'user' => array(
             // enable cookie-based authentication
             'allowAutoLogin' => true,
-        ),
-          'image' => array(
-            'class' => 'ext.imageapi.CImage',
-            'presets' => array(
-                'footer' => array( //untuk slider ricky group
-                    'cacheIn' => 'webroot.images_cache.footer',
-                    'actions' => array(
-                        'scaleAndCrop' => array('width' => 956, 'height' => 87),
-                    ),
-                ),
-                'slider' => array( //untuk slider ricky group
-                    'cacheIn' => 'webroot.images_cache.slider',
-                    'actions' => array(
-                        'scaleAndCrop' => array('width' => 900, 'height' => 300),
-                    ),
-                ),
-                'thumbs' => array(
-                    'cacheIn' => 'webroot.images_cache.thumbs',
-                    'actions' => array(
-                        'scaleAndCrop' => array('width' => 224, 'height' => 130),
-                    ),
-                ),
-                
-            ),
         ),
         
         
@@ -108,7 +83,7 @@ return array(
         ),
         // uncomment the following to use a MySQL database
         'db' => array(
-            'connectionString' => 'mysql:host=localhost;dbname=hokkydjoen',
+            'connectionString' => 'mysql:host=localhost;dbname=skripsi',
             'emulatePrepare' => true,
             'enableProfiling' => true,
             'enableParamLogging' => true,
@@ -158,5 +133,5 @@ return array(
         ),
         
     ),
-        'theme' => 'front',
+        'theme' => 'bootstrap',
 );

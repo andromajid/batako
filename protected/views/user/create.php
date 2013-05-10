@@ -1,18 +1,16 @@
 <?php
 /* @var $this UserController */
-/* @var $model SiteAdministrator */
+/* @var $model user */
 
 $this->breadcrumbs=array(
-	'Site Administrators'=>array('index'),
+	'Users'=>array('index'),
 	'Create',
 );
 
 $this->menu=array(
-	array('label'=>'List SiteAdministrator', 'url'=>array('index')),
-	array('label'=>'Manage SiteAdministrator', 'url'=>array('admin')),
+	array('label'=>'List user', 'url'=>array('index')),
+	array('label'=>'Manage user', 'url'=>array('admin')),
 );
-?>
-<?php $this->beginWidget('zii.widgets.CPortlet', array('title' => 'Create SiteAdministrator', 'hideOnEmpty' => TRUE)); ?> 
 
-<?php echo $this->renderPartial('_form', array('model'=>$model, 'group_admin' => $group_admin)); ?>
-<?php $this->endWidget();?>
+?>
+<?php echo $this->renderPartial('_form', array('model'=>$model)); ?>

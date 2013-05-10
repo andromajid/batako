@@ -1,20 +1,21 @@
 <?php
 /* @var $this UserController */
-/* @var $model SiteAdministrator */
+/* @var $model user */
 
 $this->breadcrumbs=array(
-	'Site Administrators'=>array('index'),
-	$model->admin_id=>array('view','id'=>$model->admin_id),
+	'Users'=>array('index'),
+	$model->user_id=>array('view','id'=>$model->user_id),
 	'Update',
 );
 
 $this->menu=array(
-	array('label'=>'List SiteAdministrator', 'url'=>array('index')),
-	array('label'=>'Create SiteAdministrator', 'url'=>array('create')),
-	array('label'=>'View SiteAdministrator', 'url'=>array('view', 'id'=>$model->admin_id)),
-	array('label'=>'Manage SiteAdministrator', 'url'=>array('admin')),
+	array('label'=>'List user', 'url'=>array('index')),
+	array('label'=>'Create user', 'url'=>array('create')),
+	array('label'=>'View user', 'url'=>array('view', 'id'=>$model->user_id)),
+	array('label'=>'Manage user', 'url'=>array('admin')),
 );
 ?>
-<?php $this->beginWidget('zii.widgets.CPortlet', array('title' => 'Update SiteAdministrator '.$model->admin_username, 'hideOnEmpty' => TRUE)); ?> 
-<?php echo $this->renderPartial('_form', array('model'=>$model, 'group_admin' => $group_admin)); ?>
-<?php $this->endWidget();?>
+
+<h1>Update user <?php echo $model->user_id; ?></h1>
+
+<?php echo $this->renderPartial('_form', array('model'=>$model)); ?>

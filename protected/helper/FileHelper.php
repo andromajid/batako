@@ -9,7 +9,7 @@ class FileHelper {
         return $strFileName;
     }
 
-    public static function randStr($len=6, $format='ALL_WORD') {
+    public static function randStr($len = 6, $format = 'ALL_WORD') {
         switch ($format) {
             case 'ALL_WORD':
                 $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -33,6 +33,42 @@ class FileHelper {
         while (strlen($password) < $len)
             $password.=substr($chars, (mt_rand() % strlen($chars)), 1);
         return $password;
+    }
+
+    public static function avatar_upload($model, $name) {
+        Yii::import('application.extensions.image.Image');
+        $upload_file = self::upload_with_model($model, $name);
+        $model->$name = $upload_file->name;
+        if (!empty($upload_file)) {
+            $image_location = Yii::getPathOfAlias('webroot') . '/files/images/user/' . $upload_file->name;
+            $upload_file->saveAs($image_location);
+            self::resize_image(300, 300, $image_location);
+            return $uploadedFile->name;
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * upload file with model
+     * @param Model $model Model-nya
+     * @param String $name attribute image pada model 
+     */
+    public static function upload_with_model($model, $name) {
+        $uploadedFile = CUploadedFile::getInstance($model, $name);
+        return $uploadedFile;
+    }
+
+    /**
+     * fungsi buat merisize image
+     * @param Int $width lebar gambar
+     * @param Int $height tinggi gambar
+     */
+    public static function resize_image($width, $height, $image_location) {
+        Yii::import('application.extensions.image.Image');
+        $image = new Image($image_location);
+        $image->resize($width, $height, Image::NONE)->quality(75)->sharpen(20);
+        $image->save();
     }
 
 }

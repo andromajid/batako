@@ -2,62 +2,50 @@
 /* @var $this UserController */
 /* @var $model user */
 
-$this->breadcrumbs=array(
-	'Users'=>array('index'),
-	'Manage',
+$this->breadcrumbs = array(
+    'Users' => array('index'),
+    'Manage',
 );
 
-$this->menu=array(
-	array('label'=>'List user', 'url'=>array('index')),
-	array('label'=>'Create user', 'url'=>array('create')),
+$this->menu = array(
+    array('label' => 'Create user', 'url' => array('create')),
 );
-
-Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
-	$('.search-form').toggle();
-	return false;
-});
-$('.search-form form').submit(function(){
-	$.fn.yiiGridView.update('user-grid', {
-		data: $(this).serialize()
-	});
-	return false;
-});
-");
 ?>
 
-<h1>Manage Users</h1>
-
-<p>
-You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
-
-<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
-<div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
-	'model'=>$model,
-)); ?>
-</div><!-- search-form -->
-
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'user-grid',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
-	'columns'=>array(
-		'user_id',
-		'username',
-		'user_realname',
-		'user_email',
-		'user_password',
-		'user_is_active',
-		/*
-		'user_is_administrator',
-		'user_avatar',
-		'user_role_user_role_id',
-		*/
-		array(
-			'class'=>'CButtonColumn',
-		),
-	),
-)); ?>
+<?php
+$this->widget('zii.widgets.grid.CGridView', array(
+    'id' => 'user-grid',
+    'dataProvider' => $model->search(),
+    'filter' => $model,
+    'columns' => array(
+        array(
+            'header' => 'No.',
+            'value' => '$this->grid->dataProvider->pagination->currentPage * $this->grid->dataProvider->pagination->pageSize + ($row+1)."."',
+            'htmlOptions' => array('style' => 'text-align:center;'),
+        ),
+        'username',
+        'user_realname',
+        'user_email',
+        array(
+            'name' => 'user_is_active',
+            'type' => 'raw',
+            'value' => '($data->user_is_active == 1 ? CHtml::tag("span", array("class" => "badge badge-success"), "√") :CHtml::tag("span", array("class" => "badge badge-important"), "x"))',
+            'filter' => CHtml::activeDropDownList($model, 'user_is_active', array('' => '', '1' => 'Active', '0' => 'InActive')),
+            'htmlOptions' => array('style' => 'text-align:center;'),
+        ),
+        array(
+            'name' => 'user_role_user_role_id',
+            'value' => 'dbHelper::getOne("user_role_name", "user_role", "user_role_id=".$data->user_role_user_role_id)',
+            'filter' => CHtml::activeDropDownList($model, 'user_role_user_role_id', CHtml::listData(user_role::model()->findAll('user_role_is_active=\'1\''), 'user_role_id', 'user_role_name'), array('empty'=>'')),
+            ),
+        /*
+          'user_is_administrator',
+          'user_avatar',
+          'user_role_user_role_id',
+         */
+        array(
+            'class' => 'CButtonColumn',
+        ),
+    ),
+));
+?>

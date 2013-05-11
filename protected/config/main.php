@@ -4,8 +4,8 @@
 // Yii::setPathOfAlias('local','path/to/local-folder');
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
-$_CONFIG=array();
-$_CONFIG['app']['base_url']             = 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['SCRIPT_NAME']);
+$_CONFIG = array();
+$_CONFIG['app']['base_url'] = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['SCRIPT_NAME']);
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
     'name' => 'hokkydjoen',
@@ -37,8 +37,6 @@ return array(
             // enable cookie-based authentication
             'allowAutoLogin' => true,
         ),
-        
-        
         'widgetFactory' => array(
             'widgets' => array(
                 'CGridView' => array(
@@ -53,32 +51,14 @@ return array(
             'urlFormat' => 'path',
             'showScriptName' => false,
             'rules' => array(
-                //'login' => 'site/login',
-                'login-h0dj03n' => 'site/login',
-                'logout' => 'site/logout',
-                'profile' => 'page/show/id/3',
-                'reward' => 'news/news_category_detail/id/5',
-                'marketing-plan' => 'page/show/id/4',
-                'article' => 'news/news_category_detail/id/2',
-                'news_event' => 'news/news_category_detail/id/3',
-                'contact-us' => 'page/show/id/5',
-                'admin/login' => 'site/login',
-//                '<module:\w+>/<controller:\w+>/<action:\w+>/*' => '<module>/<controller>/<action>',
-//                '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
-//                '<controller:\w+>/<id:\d+>' => '<controller>/view',
-//                //'<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
-//                '<controller:\w+>/<action:\w+>/*' => '<controller>/<action>',
-//                '<controller:\w+>/<id:\d+>' => '<controller>/view',
-//                //'<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
-//                '<controller:\w+>/<action:\w+>/*' => '<controller>/<action>',
-                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
-                '<controller:\w+>/<action:\w+>/<id:\d+>/<title>' => '<controller>/<action>',
-                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
-                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                'login' => 'admin/default/login',
+                'logout' => 'admin/default/logout',
+                '<controller:\w+>/<action:\w+>/*' => '<controller>/<action>',
+                //'<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>/*' => '<controller>/<action>',
+                '<module:\w+>/<controller:\w+>/<action:\w+>/*' => '<module>/<controller>/<action>',
                 '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
-                '<module1:\w+>/<module2:\w+>/<controller:\w+>/<action:\w+>/<id:\d+>' => '<module1>/<module2>/<controller>/<action>',
-                '<module1:\w+>/<module2:\w+>/<controller:\w+>/<action:\w+>' => '<module1>/<module2>/<controller>/<action>',
-                '<controller:\w+>/<action:\w+>/<value>' => '<controller>/<action>',
+            //'<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
             ),
         ),
         // uncomment the following to use a MySQL database
@@ -120,18 +100,17 @@ return array(
         'sponsor' => 500000,
         'match' => 2000000,
         'node' => 30000,
-        'bonus'=>array(
-            'sponsor'=>500000,
-            'match'=>2000000,
-            'level'=>30000,
-            'cut_adm'=>0.2, //persentase
+        'bonus' => array(
+            'sponsor' => 500000,
+            'match' => 2000000,
+            'level' => 30000,
+            'cut_adm' => 0.2, //persentase
         ),
-        'config'=>array(
-            'dir'=>array(
-            'news'=>$_CONFIG['app']['base_url'].'/files/images/',
+        'config' => array(
+            'dir' => array(
+                'news' => $_CONFIG['app']['base_url'] . '/files/images/',
             ),
         ),
-        
     ),
-        'theme' => 'bootstrap',
+    'theme' => 'bootstrap',
 );

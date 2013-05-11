@@ -31,8 +31,13 @@ class UserController extends adminController {
 
         if (isset($_POST['user'])) {
             $model->attributes = $_POST['user'];
-            if ($model->save())
+            if ($model->validate()) {
+                $model->user_password = md5($model->user_password);
+                Yii::import('application.helper.FileHelper');
+                FileHelper::avatar_upload($model, 'user_avatar');
+                $model->save(false);
                 $this->redirect(array('view', 'id' => $model->user_id));
+            }
         }
 
         $this->render('create', array(
@@ -47,6 +52,8 @@ class UserController extends adminController {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        
+        $this->title = 'Update Data '.$model->username;
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
@@ -89,6 +96,7 @@ class UserController extends adminController {
      * Manages all models.
      */
     public function actionAdmin() {
+        $this->title = 'Manage user';
         $model = new user('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['user']))
@@ -105,7 +113,7 @@ class UserController extends adminController {
      * @param integer the ID of the model to be loaded
      */
     public function loadModel($id) {
-        $model = user::model()->findByPk($id);
+        $model = user::model()->find('user_id=:id OR username=:id', array(':id' => $id));
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
         return $model;

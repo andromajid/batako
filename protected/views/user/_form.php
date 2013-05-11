@@ -10,6 +10,7 @@
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'user-form',
         'enableAjaxValidation' => false,
+        'htmlOptions' => array('enctype' => 'multipart/form-data'),
     ));
     ?>
 
@@ -38,7 +39,7 @@
 
     <div class="row">
         <?php echo $form->labelEx($model, 'user_password'); ?>
-        <?php echo $form->textField($model, 'user_password', array('size' => 60, 'maxlength' => 255)); ?>
+        <?php echo $form->passwordField($model, 'user_password', array('size' => 60, 'maxlength' => 255)); ?>
     </div>
 
     <div class="row">
@@ -48,7 +49,7 @@
 
     <div class="row">
         <?php echo $form->labelEx($model, 'user_avatar'); ?>
-        <?php echo $form->textField($model, 'user_avatar', array('size' => 60, 'maxlength' => 127)); ?>
+        <?php echo $form->fileField($model, 'user_avatar'); ?>
     </div>
 
     <div class="row">

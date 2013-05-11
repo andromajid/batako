@@ -196,7 +196,7 @@ body {
 .grid-view .filters input,
 .grid-view .filters select
 {
-    width: auto;
+    width: 73%;
     border: 1px solid #ccc;
 }
 .row {
@@ -209,4 +209,17 @@ body {
     text-align: left;
     display: block;
     margin-bottom: 5px;
+}
+input[type="file"] {
+    line-height: 0px;
+}
+.user_profile .avatar,.user_profile .table  {
+    float: left;
+}
+.user_profile .table {
+    width: 60%;
+    margin-left: 10px;
+}
+.avatar img {
+    width: 150px;
 }

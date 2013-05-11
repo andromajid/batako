@@ -52,16 +52,25 @@ class UserController extends adminController {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-        
-        $this->title = 'Update Data '.$model->username;
+
+        $this->title = 'Update Data ' . $model->username;
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['user'])) {
+            $username = $model->username;
             $model->attributes = $_POST['user'];
-            if ($model->save())
+            $validate = array('user_role_user_role_id','user_email','user_realname','user_avatar', 'user_is_active', 'user_is_administrator');
+            if ($username !== $model->username) {
+                array_push($validate, 'username');
+            }
+            if ($model->validate($validate)) {
+                Yii::import('application.helper.FileHelper');
+                $image_name = FileHelper::avatar_upload($model, 'user_avatar');
+                $model->save(false);
                 $this->redirect(array('view', 'id' => $model->user_id));
+            }
         }
 
         $this->render('update', array(

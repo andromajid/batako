@@ -38,11 +38,11 @@ class FileHelper {
     public static function avatar_upload($model, $name) {
         Yii::import('application.extensions.image.Image');
         $upload_file = self::upload_with_model($model, $name);
-        $model->$name = $upload_file->name;
         if (!empty($upload_file)) {
+            $model->$name = $upload_file->name;
             $image_location = Yii::getPathOfAlias('webroot') . '/files/images/user/' . $upload_file->name;
             $upload_file->saveAs($image_location);
-            self::resize_image(300, 300, $image_location);
+            self::resize_image(180, 180, $image_location);
             return $uploadedFile->name;
         } else {
             return '';

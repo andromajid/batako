@@ -53,8 +53,8 @@ return array(
             'rules' => array(
                 'login' => 'admin/default/login',
                 'logout' => 'admin/default/logout',
-                                '<controller:\w+>/<action:\w+>/*' => '<controller>/<action>',
                 '<module:\w+>/<controller:\w+>/<action:\w+>/*' => '<module>/<controller>/<action>',
+                '<controller:\w+>/<action:\w+>/*' => '<controller>/<action>',
                 '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
                 //'<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>/*' => '<controller>/<action>',

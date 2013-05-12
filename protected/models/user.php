@@ -51,7 +51,6 @@ class user extends CActiveRecord {
             array('user_role_user_role_id', 'numerical', 'integerOnly' => true),
             array('username', 'length', 'max' => 127),
             array('user_realname', 'length', 'max' => 45),
-            array('user_avatar', 'file', 'allowEmpty' => true, 'types' => 'jpg,jpeg,gif,png'),
             array('user_email, user_password', 'length', 'max' => 255),
             array('user_is_active, user_is_administrator', 'length', 'max' => 1),
             // The following rule is used by search().

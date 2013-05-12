@@ -53,11 +53,11 @@ return array(
             'rules' => array(
                 'login' => 'admin/default/login',
                 'logout' => 'admin/default/logout',
-                '<controller:\w+>/<action:\w+>/*' => '<controller>/<action>',
-                //'<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
-                '<controller:\w+>/<action:\w+>/*' => '<controller>/<action>',
+                                '<controller:\w+>/<action:\w+>/*' => '<controller>/<action>',
                 '<module:\w+>/<controller:\w+>/<action:\w+>/*' => '<module>/<controller>/<action>',
                 '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
+                //'<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>/*' => '<controller>/<action>',
             //'<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
             ),
         ),
@@ -96,16 +96,6 @@ return array(
     // application-level parameters that can be accessed
     // using Yii::app()->params['paramName']
     'params' => array(
-        // this is used in contact page
-        'sponsor' => 500000,
-        'match' => 2000000,
-        'node' => 30000,
-        'bonus' => array(
-            'sponsor' => 500000,
-            'match' => 2000000,
-            'level' => 30000,
-            'cut_adm' => 0.2, //persentase
-        ),
         'config' => array(
             'dir' => array(
                 'news' => $_CONFIG['app']['base_url'] . '/files/images/',

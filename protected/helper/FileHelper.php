@@ -49,6 +49,20 @@ class FileHelper {
         }
     }
 
+    public static function project_upload($model, $name) {
+        Yii::import('application.extensions.image.Image');
+        $upload_file = self::upload_with_model($model, $name);
+        if (!empty($upload_file)) {
+            $model->$name = $upload_file->name;
+            $image_location = Yii::getPathOfAlias('webroot') . '/files/images/project/' . $upload_file->name;
+            $upload_file->saveAs($image_location);
+            self::resize_image(150, 150, $image_location);
+            return $uploadedFile->name;
+        } else {
+            return '';
+        }
+    }
+
     /**
      * upload file with model
      * @param Model $model Model-nya

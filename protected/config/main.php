@@ -4,11 +4,11 @@
 // Yii::setPathOfAlias('local','path/to/local-folder');
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
-$_CONFIG = array();
+session_name('batako');
 $_CONFIG['app']['base_url'] = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['SCRIPT_NAME']);
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
-    'name' => 'hokkydjoen',
+    'name' => 'batako',
     // preloading 'log' component
     'preload' => array('log'),
     'language' => 'id',

@@ -1,0 +1,974 @@
+From 0d1ebc308b4abc9ffcc5326b1d1b52bbe02927b0 Mon Sep 17 00:00:00 2001
+From: arkananta <arkananta@arkanantamajid-Compaq-Presario-CQ41-Notebook-PC>
+Date: Mon, 13 May 2013 22:51:45 +0700
+Subject: [PATCH] add task type CRUD
+
+---
+ protected/components/FrontController.php   |   32 ----
+ protected/components/GalleryLib.php        |  128 ----------------
+ protected/components/NewsLib.php           |  226 ----------------------------
+ protected/components/News_helper.php       |   20 ---
+ protected/components/PageLib.php           |   47 ------
+ protected/components/VofficeController.php |   54 -------
+ protected/components/adminAuth.php         |   19 ++-
+ protected/components/memberController.php  |   11 --
+ protected/config/main.php                  |    4 +-
+ protected/controllers/SiteController.php   |   31 +---
+ protected/controllers/TaskController.php   |   25 +++
+ protected/models/project.php               |   12 +-
+ protected/models/task.php                  |  196 ++++++++++++------------
+ 13 files changed, 144 insertions(+), 661 deletions(-)
+ delete mode 100755 protected/components/FrontController.php
+ delete mode 100755 protected/components/GalleryLib.php
+ delete mode 100755 protected/components/NewsLib.php
+ delete mode 100755 protected/components/News_helper.php
+ delete mode 100755 protected/components/PageLib.php
+ delete mode 100755 protected/components/VofficeController.php
+ delete mode 100755 protected/components/memberController.php
+ create mode 100644 protected/controllers/TaskController.php
+
+diff --git a/protected/components/FrontController.php b/protected/components/FrontController.php
+deleted file mode 100755
+index 4206d59..0000000
+--- a/protected/components/FrontController.php
++++ /dev/null
+@@ -1,32 +0,0 @@
+-<?php
+-
+-/**
+- * Description of FrontController
+- *
+- * @author arkananta
+- */
+-class FrontController extends CController {
+-
+-    public $breadcrumbs=array();
+-    public $menu=array();
+-
+-    /**
+-     * authentifikasi di sini
+-     */
+-    public function __construct($id, $module = null) {
+-        parent::__construct($id, $module);
+-        Yii::app()->theme = 'front';
+-        
+-        
+-        if(!session_id())
+-        {
+-            session_start();
+-        }
+-        
+-        
+-    }
+-    
+-
+-}
+-
+-?>
+diff --git a/protected/components/GalleryLib.php b/protected/components/GalleryLib.php
+deleted file mode 100755
+index 4caec1b..0000000
+--- a/protected/components/GalleryLib.php
++++ /dev/null
+@@ -1,128 +0,0 @@
+-<?php
+-
+-/*
+- * To change this template, choose Tools | Templates
+- * and open the template in the editor.
+- */
+-
+-/**
+- * Description of galleryLib
+- *
+- * @author tejomurti
+- * Library untuk class lib
+- */
+-class GalleryLib {
+-    //put your code here
+-    
+-    public $model_gallery;
+-    public $model_gallery_category;
+-    
+-    public function __construct() {
+-        $this->model_gallery=new SiteGallery;
+-        $this->model_gallery_category=new SiteGalleryCategory;
+-    }
+-    /**
+-     * menampilkan list kategori berita
+-     * @param string $condition
+-     * @param int $limit
+-     * @return object
+-     */
+-    public function list_category($condition='',$limit='unlimited')
+-    {
+-        $criteria=new CDbCriteria;
+-        if(trim($condition)!='')
+-        {
+-            $criteria->addCondition($condition);
+-        }
+-        if(is_numeric($limit))
+-        {
+-            $criteria->limit=$limit;
+-        }
+-        $criteria->with=array();
+-        
+-        $results=array();
+-        $count=$this->model_gallery_category->count($criteria);
+-        if($count)
+-        {
+-            $results=$this->model_gallery_category->findAll($criteria);
+-        }
+-        
+-        return $results;
+-    }
+-    
+-    /**
+-     * untuk menghitung jumlah artikel dalam 1 kategori
+-     * @param int $gallery_category_id
+-     */
+-    public function count_gallery_on_category($gallery_category_id,$condition='')
+-    {
+-        $criteria=new CDbCriteria;
+-        $criteria->addCondition('gallery_gallery_category_id='.  intval($gallery_category_id).' '.$condition);
+-        
+-        $count=$this->model_gallery->count($criteria);
+-        
+-        return $count;
+-    }
+-    
+-    /**
+-     * menampilkan berita by category
+-     * @param int $gallery_category_id
+-     * @param string $additional_condition
+-     * @return array(
+-     *      'count'=>'jumlah data',
+-     *      'results'=>'object',
+-     * );
+-     */
+-    public function list_gallery_by_category($gallery_category_id,$additional_condition='',$limit=10)
+-    {
+-        $criteria=new CDbCriteria;
+-        $criteria->addCondition('gallery_gallery_category_id='.  intval($gallery_category_id).' AND gallery_category_is_active="1" '.$additional_condition);
+-        $criteria->with=array('rel_gallery_to_category');
+-        $criteria->together=true;
+-        $results=array();
+-        $count=$this->model_gallery->count($criteria);
+-        if(is_numeric($limit))
+-        {
+-            $criteria->limit=$limit;
+-        }
+-        if($count)
+-        {
+-            $results=$this->model_gallery->findAll($criteria);
+-        }
+-        
+-       
+-        
+-        return array('count'=>$count,'results'=>$results,);
+-    }
+-    
+-    /**
+-     * list article
+-     * 
+-     * @param int $limit
+-     * @param string $additional_condition
+-     * @param string $order
+-     * 
+-     */
+-    public function list_gallery($limit=5, $additional_condition='',$order='gallery_id DESC')
+-    {
+-        $criteria=new CDbCriteria;
+-        $criteria->addCondition('gallery_is_active="1" '.$additional_condition);
+-        $criteria->order=$order;
+-        $criteria->limit=$limit;
+-        $criteria->with=array('rel_gallery_to_category');
+-        $criteria->together=true;
+-        $results=array();
+-        $count=$this->model_gallery->count($criteria);
+-        
+-        
+-        if($count)
+-        {
+-            $results=$this->model_gallery->findAll($criteria);
+-        }
+-        
+-        return array('count'=>$count,'results'=>$results);
+-    }
+-    
+-}
+-
+-?>
+diff --git a/protected/components/NewsLib.php b/protected/components/NewsLib.php
+deleted file mode 100755
+index 5173b27..0000000
+--- a/protected/components/NewsLib.php
++++ /dev/null
+@@ -1,226 +0,0 @@
+-<?php
+-
+-/*
+- * To change this template, choose Tools | Templates
+- * and open the template in the editor.
+- */
+-
+-/**
+- * Description of NewsLib
+- *
+- * @author tejomurti
+- * Library untuk class lib
+- */
+-class NewsLib {
+-    //put your code here
+-    
+-    public $model_news;
+-    public $model_news_category;
+-    
+-    public function __construct() {
+-        $this->model_news=new site_news;
+-        $this->model_news_category=new site_news_category;
+-    }
+-    
+-    /**
+-     * fungsi searching data news
+-     * @param string $query
+-     */
+-    public function search($query='',$fields=array('news_title','news_content'),$limit=10, $offset=0)
+-    {
+-        $purify=new CHtmlPurifier;
+-        $keywords=$purify->purify($query);
+-        $sql='SELECT * FROM site_news WHERE ';
+-
+-		$explode_keywords=explode('_',$keywords);
+-		if(isset($explode_keywords) AND is_array($explode_keywords))
+-		{
+-			$field_no=1;
+-			foreach($fields AS $field)
+-			{
+-				$no=1;
+-				foreach($explode_keywords AS $val)
+-				{
+-					$op_or=($field_no<count($fields) AND $no==count($explode_keywords))?' OR ':'';
+-					$sep_1=($no==1)?'( ':'';
+-					$sep_2=($no==count($explode_keywords))?' )':'';
+-					$op_and=($no<count($explode_keywords))?'AND':'';
+-					
+-					$sql.=$sep_1.$field.' LIKE "%'.$val.'%" '.$op_and.' '.$sep_2.$op_or;
+-					
+-					$no++;
+-				}
+-				
+-				$field_no++;
+-			}
+-				
+-		}
+-		$sql.='  GROUP BY news_id ORDER BY news_id DESC LIMIT '.$offset.','.$limit.'';
+-                
+-             $criteria=new CDbCriteria;
+-             $criteria->limit=$limit;
+-             $criteria->offset=$offset;
+-             $pagination = new CPagination($count);
+-             $pagination->pageSize = Yii::app()->params['newsPerPage'];
+-             $pagination->applyLimit($criteria);   
+-             
+-             $results=Yii::app()->db->createCommand($sql)->queryAll();   
+-             if(empty($results))
+-             {
+-                 $results=array();
+-             }
+-             
+-             $count=count($results);
+-             return array('count'=>$count,'results'=>$results,'pagination'=>$pagination);
+-    }
+-    
+-    function highlightWords_search($string,$words,$ajax=false)
+- 	{
+- 	
+- 		$words=explode(' ',$words);
+- 		
+- 		for($i=0;$i<sizeOf($words);$i++) {
+- 		
+- 			if($ajax==true)
+- 			{
+- 				$string=str_ireplace($words[$i], '<strong class=\"highlight\">'.$words[$i].'<\/strong>', $string);
+- 			} else {
+- 				$string=str_ireplace($words[$i], '<strong class="highlight">'.$words[$i].'</strong>', $string);
+- 			}
+-  			
+-  		}
+-  		
+- 		return $string;
+-	}
+-	
+-	function cleanHTML_search($input, $ending='...') 
+-	{
+- 
+-    	$output = strip_tags($input);
+- 
+-    	$output = substr($output, 0, 100);
+-    	$output .= $ending;
+-    
+-    
+-    	return $output;
+-	}
+-    
+-    /**
+-     * menampilkan list kategori berita
+-     * @param string $condition
+-     * @return array
+-     */
+-    public function list_category($condition='',$limit='unlimited')
+-    {
+-        $criteria=new CDbCriteria;
+-        if(trim($condition)!='')
+-        {
+-            $criteria->addCondition($condition);
+-        }
+-        if(is_numeric($limit))
+-        {
+-            $criteria->limit=$limit;
+-        }
+-        $criteria->with=array();
+-        
+-        $results=array();
+-        $count=$this->model_news_category->count($criteria);
+-        if($count)
+-        {
+-            $results=$this->model_news_category->findAll($criteria);
+-        }
+-        
+-        return $results;
+-    }
+-    
+-    /**
+-     * untuk menghitung jumlah artikel dalam 1 kategori
+-     * @param int $news_category_id
+-     */
+-    public function count_news_on_category($news_category_id,$condition='')
+-    {
+-        $criteria=new CDbCriteria;
+-        $criteria->addCondition('news_news_category_id='.  intval($news_category_id).' '.$condition);
+-        
+-        $count=$this->model_news->count($criteria);
+-        
+-        return $count;
+-    }
+-    
+-    /**
+-     * menampilkan berita by category
+-     * @param int $news_category_id
+-     * @param string $additional_condition
+-     * @param bool $paging false;
+-     * @return array(
+-     *      'count'=>'jumlah data',
+-     *      'results'=>'object',
+-     * );
+-     */
+-    public function list_news_by_category($news_category_id=null,$additional_condition='',$paging=false,$limit='unlimited',$order='news_id DESC')
+-    {
+-        $criteria=new CDbCriteria;
+-        if(isset($news_category_id) AND is_numeric($news_category_id))
+-        {
+-            $criteria->addCondition('news_news_category_id='.  intval($news_category_id));
+-        }
+-        $criteria->addCondition('news_category_is_active="1" '.$additional_condition);
+-        $criteria->with=array('rel_news_to_news_category');
+-        $criteria->order=$order;
+-        $criteria->together=true;
+-        
+-        if(is_numeric($limit))
+-        {
+-            $criteria->limit=$limit;
+-        }
+-        
+-        $results=array();
+-        $count=$this->model_news->count($criteria);
+-        $pagination=array();
+-        if($paging==true)
+-        {
+-            $pagination = new CPagination($count);
+-            $pagination->pageSize = Yii::app()->params['newsPerPage'];
+-            $pagination->applyLimit($criteria);
+-        }
+-        if($count)
+-        {
+-            $results=$this->model_news->findAll($criteria);
+-        }
+-        
+-       
+-        
+-        return array('count'=>$count,'results'=>$results,'pagination'=>$pagination,);
+-    }
+-    
+-    /**
+-     * list article
+-     * 
+-     * @param int $limit
+-     * @param string $additional_condition
+-     * @param string $order
+-     * 
+-     */
+-    public function list_news($limit=5, $additional_condition='AND news_category_type="news"',$order='news_id DESC')
+-    {
+-        $criteria=new CDbCriteria;
+-        $criteria->addCondition('news_is_active="1" AND news_is_criteria="general" '.$additional_condition);
+-        $criteria->order=$order;
+-        $criteria->limit=$limit;
+-        $criteria->with=array('rel_news_to_news_category');
+-        $criteria->together=true;
+-        $results=array();
+-        $count=$this->model_news->count($criteria);
+-        
+-        
+-        if($count)
+-        {
+-            $results=$this->model_news->findAll($criteria);
+-        }
+-        
+-        return array('count'=>$count,'results'=>$results);
+-    }
+-    
+-}
+-
+-?>
+diff --git a/protected/components/News_helper.php b/protected/components/News_helper.php
+deleted file mode 100755
+index 2c95133..0000000
+--- a/protected/components/News_helper.php
++++ /dev/null
+@@ -1,20 +0,0 @@
+-<?php
+-
+-/*
+- * To change this template, choose Tools | Templates
+- * and open the template in the editor.
+- */
+-
+-class News_helper{
+-    
+-    
+-    public static function category_name($id)
+-    {
+-        $sql='SELECT news_category_title FROM site_news_category WHERE news_category_id='.  intval($id);
+-        
+-        return Yii::app()->db->createCommand($sql)->queryScalar();
+-    }
+-    
+-}
+-
+-?>
+diff --git a/protected/components/PageLib.php b/protected/components/PageLib.php
+deleted file mode 100755
+index c94204e..0000000
+--- a/protected/components/PageLib.php
++++ /dev/null
+@@ -1,47 +0,0 @@
+-<?php
+-
+-/*
+- * To change this template, choose Tools | Templates
+- * and open the template in the editor.
+- */
+-
+-/**
+- * Description of PageLib
+- *
+- * @author tejomurti
+- * Library Untuk Page Content
+- */
+-class PageLib {
+-    //put your code here
+-    
+-    public $model;
+-   
+-    public function __construct() {
+-        $this->model=new site_page;
+-        
+-    }
+-    
+-    /**
+-     * detail page
+-     * @param int $id
+-     * @return object
+-     */
+-    public function page_detail($id,$additional_condition='')
+-    {
+-        $criteria=new CDbCriteria;
+-        $criteria->addCondition('page_id='.  intval($id).' '.$additional_condition);
+-        
+-        $count=$this->model->count($criteria);
+-        $row=array();
+-        if($count)
+-        {
+-            $row=$this->model->find($criteria);
+-        }
+-        
+-        return array('count'=>$count,'row'=>$row,);
+-        
+-    }
+-    
+-}
+-
+-?>
+diff --git a/protected/components/VofficeController.php b/protected/components/VofficeController.php
+deleted file mode 100755
+index 62be1c1..0000000
+--- a/protected/components/VofficeController.php
++++ /dev/null
+@@ -1,54 +0,0 @@
+-<?php
+-
+-/**
+- * Description of adminController
+- *
+- * @author arkananta
+- */
+-class VofficeController extends CController {
+-
+-    public $breadcrumbs=array();
+-    public $menu=array();
+-
+-    /**
+-     * authentifikasi di sini
+-     */
+-    public function __construct($id, $module = null) {
+-        parent::__construct($id, $module);
+-        Yii::app()->theme = 'abound_vo';
+-        
+-        
+-        if(!session_id())
+-        {
+-            session_start();
+-        }
+-        
+-        if(!$this->checkIsLogin())
+-        {
+-            $this->redirect(Yii::app()->baseUrl.'/member/login');
+-        }
+-        
+-    }
+-
+-    public function checkIsLogin()
+-    {
+-        $status=true;
+-        if(!isset($_SESSION['member']) OR empty($_SESSION['member']))
+-        {
+-            $status=false;
+-        }
+-        
+-        return $status;
+-    }
+-    
+-    /**
+-     * dapatkan network id
+-     */
+-    public function getNetworkId()
+-    {
+-        return $_SESSION['member']['network_id'];
+-    }
+-
+-}
+-
+-?>
+diff --git a/protected/components/adminAuth.php b/protected/components/adminAuth.php
+index a18ad66..72b4850 100755
+--- a/protected/components/adminAuth.php
++++ b/protected/components/adminAuth.php
+@@ -5,7 +5,7 @@
+  */
+ class adminAuth {
+ 
+-    public $auth_name = 'admin';
++    public $auth_name = 'member';
+ 
+     public function __construct() {
+         if (!session_id()) {
+@@ -84,21 +84,20 @@ class adminAuth {
+     }
+ 
+     public function login($username, $password) {
+-        $data_model = Yii::app()->db->createCommand()->from('site_administrator')->where('admin_username=:admin_id', array(':admin_id' => $username))
++        $data_model = Yii::app()->db->createCommand()->from('user')->where('username=:username', array(':username' => $username))
+                 ->queryRow();
+         if (isset($data_model)) {
+-            if ($data_model['admin_is_active'] == '0') {
++            if ($data_model['user_is_active'] == '0') {
+                 return array('error' => true, 'message' => 'username : ' . $username . ' tidak aktiv');
+-            } elseif (md5($password) != $data_model['admin_password']) {
++            } elseif (md5($password) != $data_model['user_password']) {
+                 return array('error' => true, 'message' => 'password salah');
+             } else {
+                 //update last loginnya
+-                Yii::app()->db->createCommand()->update('site_administrator', array('admin_last_login' => date('Y-m-d H:i:s')), 'admin_id=:admin_id', array(':admin_id' => $data_model['admin_id']));
+-                $data_arr = array('admin_id' => $data_model['admin_id'],
+-                    'admin_username' => $data_model['admin_username'],
+-                    'admin_password' => $data_model['admin_password'],
+-                    'admin_group_id' => $data_model['admin_group_id'],
+-                    'admin_group_title' => dbHelper::getOne('admin_group_title', 'site_administrator_group', 'admin_group_id=\'' . $data_model['admin_group_id'] . '\''));
++                $data_arr = array('user_id' => $data_model['user_id'],
++                    'username' => $data_model['username'],
++                    'user_password' => $data_model['user_password'],
++                    'user_is_administrator' => $data_model['user_is_administrator'],
++                    'user_role_user_role_id' => $data_model['user_role_user_role_id'],);
+                 $_SESSION[$this->auth_name] = $data_arr;
+                 return array('error' => false, 'message success');
+             }
+diff --git a/protected/components/memberController.php b/protected/components/memberController.php
+deleted file mode 100755
+index cfd1692..0000000
+--- a/protected/components/memberController.php
++++ /dev/null
+@@ -1,11 +0,0 @@
+-<?php
+-
+-class memberController extends CController{
+-    //put your code here
+-    public function __construct($id, $module = null) {
+-        parent::__construct($id, $module);
+-        
+-    }
+-}
+-
+-?>
+diff --git a/protected/config/main.php b/protected/config/main.php
+index 7cfd895..28fb31a 100644
+--- a/protected/config/main.php
++++ b/protected/config/main.php
+@@ -4,11 +4,11 @@
+ // Yii::setPathOfAlias('local','path/to/local-folder');
+ // This is the main Web application configuration. Any writable
+ // CWebApplication properties can be configured here.
+-$_CONFIG = array();
++session_name('batako');
+ $_CONFIG['app']['base_url'] = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['SCRIPT_NAME']);
+ return array(
+     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
+-    'name' => 'hokkydjoen',
++    'name' => 'batako',
+     // preloading 'log' component
+     'preload' => array('log'),
+     'language' => 'id',
+diff --git a/protected/controllers/SiteController.php b/protected/controllers/SiteController.php
+index a0f8607..16a1341 100644
+--- a/protected/controllers/SiteController.php
++++ b/protected/controllers/SiteController.php
+@@ -44,29 +44,6 @@ class SiteController extends Controller {
+     }
+ 
+     /**
+-     * Displays the contact page
+-     */
+-    public function actionContact() {
+-        $model = new ContactForm;
+-        if (isset($_POST['ContactForm'])) {
+-            $model->attributes = $_POST['ContactForm'];
+-            if ($model->validate()) {
+-                $name = '=?UTF-8?B?' . base64_encode($model->name) . '?=';
+-                $subject = '=?UTF-8?B?' . base64_encode($model->subject) . '?=';
+-                $headers = "From: $name <{$model->email}>\r\n" .
+-                        "Reply-To: {$model->email}\r\n" .
+-                        "MIME-Version: 1.0\r\n" .
+-                        "Content-type: text/plain; charset=UTF-8";
+-
+-                mail(Yii::app()->params['adminEmail'], $subject, $model->body, $headers);
+-                Yii::app()->user->setFlash('contact', 'Thank you for contacting us. We will respond to you as soon as possible.');
+-                $this->refresh();
+-            }
+-        }
+-        $this->render('contact', array('model' => $model));
+-    }
+-
+-    /**
+      * Displays the login page
+      */
+     public function actionLogin() {
+@@ -74,18 +51,12 @@ class SiteController extends Controller {
+         $this->layout = '//layouts/admin_login';
+         $model = new LoginForm;
+ 
+-//		// if it is ajax validation request
+-//		if(isset($_POST['ajax']) && $_POST['ajax']==='login-form')
+-//		{
+-//			echo CActiveForm::validate($model);
+-//			Yii::app()->end();
+-//		}
+         // collect user input data
+         if (isset($_POST['LoginForm'])) {
+             $model->attributes = $_POST['LoginForm'];
+             // validate user input and redirect to the previous page if valid
+             if ($model->validate())
+-                $this->redirect(array('admin/dashboard'));
++                $this->redirect(array('/dashboard'));
+         }
+         // display the login form
+         $this->render('admin_login', array('model' => $model));
+diff --git a/protected/controllers/TaskController.php b/protected/controllers/TaskController.php
+new file mode 100644
+index 0000000..01b64f7
+--- /dev/null
++++ b/protected/controllers/TaskController.php
+@@ -0,0 +1,25 @@
++<?php
++
++/*
++ * To change this template, choose Tools | Templates
++ * and open the template in the editor.
++ */
++
++/**
++ * Description of TaskController
++ *
++ * @author arkananta
++ */
++class TaskController extends adminController {
++    //put your code here
++    public function actionCreate($project_id) {
++        $data_project = project::model()->getProjectById($project_id);
++        if(!$data_project)
++            throw new CHttpException(404, 'The requested page does not exist.');
++        $task = new task;
++        $this->render('task_create', array('data_project' => $data_project,
++                                           'task' => $task));
++    }
++}
++
++?>
+diff --git a/protected/models/project.php b/protected/models/project.php
+index 345357e..2bcae5d 100644
+--- a/protected/models/project.php
++++ b/protected/models/project.php
+@@ -106,5 +106,15 @@ class project extends CActiveRecord {
+             'criteria' => $criteria,
+         ));
+     }
+-
++    /**
++     * Buat ambil data project
++     * @param Int $project_id primary key
++     */
++    public function getProjectById($project_id) {
++        $data = Yii::app()->db->createCommand()->from('project')->where('project_id=:id', array(':id' => $project_id))->queryRow();
++        if($data) 
++            return $data;
++        else
++            return false;
++    }
+ }
+\ No newline at end of file
+diff --git a/protected/models/task.php b/protected/models/task.php
+index 12837b2..2ba2d89 100644
+--- a/protected/models/task.php
++++ b/protected/models/task.php
+@@ -26,112 +26,108 @@
+  * @property Project $taskProject
+  * @property TaskSprint[] $taskSprints
+  */
+-class task extends CActiveRecord
+-{
+-	/**
+-	 * Returns the static model of the specified AR class.
+-	 * @param string $className active record class name.
+-	 * @return task the static model class
+-	 */
+-	public static function model($className=__CLASS__)
+-	{
+-		return parent::model($className);
+-	}
++class task extends CActiveRecord {
+ 
+-	/**
+-	 * @return string the associated database table name
+-	 */
+-	public function tableName()
+-	{
+-		return 'task';
+-	}
++    /**
++     * Returns the static model of the specified AR class.
++     * @param string $className active record class name.
++     * @return task the static model class
++     */
++    public static function model($className = __CLASS__) {
++        return parent::model($className);
++    }
+ 
+-	/**
+-	 * @return array validation rules for model attributes.
+-	 */
+-	public function rules()
+-	{
+-		// NOTE: you should only define rules for those attributes that
+-		// will receive user inputs.
+-		return array(
+-			array('task_title', 'required'),
+-			array('task_point, task_creator_user_id, task_assign_user_id, task_estimate_hour, task_project_id, task_task_type_id, task_progress', 'numerical', 'integerOnly'=>true),
+-			array('task_title', 'length', 'max'=>127),
+-			array('task_is_end', 'length', 'max'=>45),
+-			array('task_description, task_create_datetime, task_start_datetime, task_end_datetime', 'safe'),
+-			// The following rule is used by search().
+-			// Please remove those attributes that should not be searched.
+-			array('task_id, task_title, task_description, task_point, task_creator_user_id, task_assign_user_id, task_create_datetime, task_start_datetime, task_end_datetime, task_estimate_hour, task_project_id, task_task_type_id, task_is_end, task_progress', 'safe', 'on'=>'search'),
+-		);
+-	}
++    /**
++     * @return string the associated database table name
++     */
++    public function tableName() {
++        return 'task';
++    }
+ 
+-	/**
+-	 * @return array relational rules.
+-	 */
+-	public function relations()
+-	{
+-		// NOTE: you may need to adjust the relation name and the related
+-		// class name for the relations automatically generated below.
+-		return array(
+-			'taskTaskType' => array(self::BELONGS_TO, 'TaskType', 'task_task_type_id'),
+-			'taskCreatorUser' => array(self::BELONGS_TO, 'User', 'task_creator_user_id'),
+-			'taskAssignUser' => array(self::BELONGS_TO, 'User', 'task_assign_user_id'),
+-			'taskProject' => array(self::BELONGS_TO, 'Project', 'task_project_id'),
+-			'taskSprints' => array(self::HAS_MANY, 'TaskSprint', 'task_task_id'),
+-		);
+-	}
++    /**
++     * @return array validation rules for model attributes.
++     */
++    public function rules() {
++        // NOTE: you should only define rules for those attributes that
++        // will receive user inputs.
++        return array(
++            array('task_title', 'required'),
++            array('task_point, task_creator_user_id, task_assign_user_id, task_estimate_hour, task_project_id, task_task_type_id, task_progress', 'numerical', 'integerOnly' => true),
++            array('task_title', 'length', 'max' => 127),
++            array('task_is_end', 'length', 'max' => 45),
++            array('task_description, task_create_datetime, task_start_datetime, task_end_datetime', 'safe'),
++            // The following rule is used by search().
++            // Please remove those attributes that should not be searched.
++            array('task_id, task_title, task_description, task_point, task_creator_user_id, task_assign_user_id, task_create_datetime, task_start_datetime, task_end_datetime, task_estimate_hour, task_project_id, task_task_type_id, task_is_end, task_progress', 'safe', 'on' => 'search'),
++        );
++    }
+ 
+-	/**
+-	 * @return array customized attribute labels (name=>label)
+-	 */
+-	public function attributeLabels()
+-	{
+-		return array(
+-			'task_id' => 'Task',
+-			'task_title' => 'Task Title',
+-			'task_description' => 'Task Description',
+-			'task_point' => 'Task Point',
+-			'task_creator_user_id' => 'Task Creator User',
+-			'task_assign_user_id' => 'Task Assign User',
+-			'task_create_datetime' => 'Task Create Datetime',
+-			'task_start_datetime' => 'Task Start Datetime',
+-			'task_end_datetime' => 'Task End Datetime',
+-			'task_estimate_hour' => 'Task Estimate Hour',
+-			'task_project_id' => 'Task Project',
+-			'task_task_type_id' => 'Task Task Type',
+-			'task_is_end' => 'Task Is End',
+-			'task_progress' => 'Task Progress',
+-		);
+-	}
++    /**
++     * @return array relational rules.
++     */
++    public function relations() {
++        // NOTE: you may need to adjust the relation name and the related
++        // class name for the relations automatically generated below.
++        return array(
++            'taskTaskType' => array(self::BELONGS_TO, 'TaskType', 'task_task_type_id'),
++            'taskCreatorUser' => array(self::BELONGS_TO, 'User', 'task_creator_user_id'),
++            'taskAssignUser' => array(self::BELONGS_TO, 'User', 'task_assign_user_id'),
++            'taskProject' => array(self::BELONGS_TO, 'Project', 'task_project_id'),
++            'taskSprints' => array(self::HAS_MANY, 'TaskSprint', 'task_task_id'),
++        );
++    }
+ 
+-	/**
+-	 * Retrieves a list of models based on the current search/filter conditions.
+-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+-	 */
+-	public function search()
+-	{
+-		// Warning: Please modify the following code to remove attributes that
+-		// should not be searched.
++    /**
++     * @return array customized attribute labels (name=>label)
++     */
++    public function attributeLabels() {
++        return array(
++            'task_id' => 'Task',
++            'task_title' => 'Task Title',
++            'task_description' => 'Task Description',
++            'task_point' => 'Task Point',
++            'task_creator_user_id' => 'Task Creator User',
++            'task_assign_user_id' => 'Task Assign User',
++            'task_create_datetime' => 'Task Create Datetime',
++            'task_start_datetime' => 'Task Start Datetime',
++            'task_end_datetime' => 'Task End Datetime',
++            'task_estimate_hour' => 'Task Estimate Hour',
++            'task_project_id' => 'Task Project',
++            'task_task_type_id' => 'Task Task Type',
++            'task_is_end' => 'Task Is End',
++            'task_progress' => 'Task Progress',
++        );
++    }
+ 
+-		$criteria=new CDbCriteria;
++    /**
++     * Retrieves a list of models based on the current search/filter conditions.
++     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
++     */
++    public function search() {
++        // Warning: Please modify the following code to remove attributes that
++        // should not be searched.
+ 
+-		$criteria->compare('task_id',$this->task_id);
+-		$criteria->compare('task_title',$this->task_title,true);
+-		$criteria->compare('task_description',$this->task_description,true);
+-		$criteria->compare('task_point',$this->task_point);
+-		$criteria->compare('task_creator_user_id',$this->task_creator_user_id);
+-		$criteria->compare('task_assign_user_id',$this->task_assign_user_id);
+-		$criteria->compare('task_create_datetime',$this->task_create_datetime,true);
+-		$criteria->compare('task_start_datetime',$this->task_start_datetime,true);
+-		$criteria->compare('task_end_datetime',$this->task_end_datetime,true);
+-		$criteria->compare('task_estimate_hour',$this->task_estimate_hour);
+-		$criteria->compare('task_project_id',$this->task_project_id);
+-		$criteria->compare('task_task_type_id',$this->task_task_type_id);
+-		$criteria->compare('task_is_end',$this->task_is_end,true);
+-		$criteria->compare('task_progress',$this->task_progress);
++        $criteria = new CDbCriteria;
+ 
+-		return new CActiveDataProvider($this, array(
+-			'criteria'=>$criteria,
+-		));
+-	}
++        $criteria->compare('task_id', $this->task_id);
++        $criteria->compare('task_title', $this->task_title, true);
++        $criteria->compare('task_description', $this->task_description, true);
++        $criteria->compare('task_point', $this->task_point);
++        $criteria->compare('task_creator_user_id', $this->task_creator_user_id);
++        $criteria->compare('task_assign_user_id', $this->task_assign_user_id);
++        $criteria->compare('task_create_datetime', $this->task_create_datetime, true);
++        $criteria->compare('task_start_datetime', $this->task_start_datetime, true);
++        $criteria->compare('task_end_datetime', $this->task_end_datetime, true);
++        $criteria->compare('task_estimate_hour', $this->task_estimate_hour);
++        $criteria->compare('task_project_id', $this->task_project_id);
++        $criteria->compare('task_task_type_id', $this->task_task_type_id);
++        $criteria->compare('task_is_end', $this->task_is_end, true);
++        $criteria->compare('task_progress', $this->task_progress);
++
++        return new CActiveDataProvider($this, array(
++            'criteria' => $criteria,
++        ));
++    }
++    /**
++     */
+ }
+\ No newline at end of file
+-- 
+1.7.9.5
+

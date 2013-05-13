@@ -36,31 +36,11 @@ class FileHelper {
     }
 
     public static function avatar_upload($model, $name) {
-        Yii::import('application.extensions.image.Image');
-        $upload_file = self::upload_with_model($model, $name);
-        if (!empty($upload_file)) {
-            $model->$name = $upload_file->name;
-            $image_location = Yii::getPathOfAlias('webroot') . '/files/images/user/' . $upload_file->name;
-            $upload_file->saveAs($image_location);
-            self::resize_image(180, 180, $image_location);
-            return $uploadedFile->name;
-        } else {
-            return '';
-        }
+        return self::upload_image($model, $name, 'user', array('width' => 180, 'height' => 180));
     }
 
     public static function project_upload($model, $name) {
-        Yii::import('application.extensions.image.Image');
-        $upload_file = self::upload_with_model($model, $name);
-        if (!empty($upload_file)) {
-            $model->$name = $upload_file->name;
-            $image_location = Yii::getPathOfAlias('webroot') . '/files/images/project/' . $upload_file->name;
-            $upload_file->saveAs($image_location);
-            self::resize_image(150, 150, $image_location);
-            return $uploadedFile->name;
-        } else {
-            return '';
-        }
+        return self::upload_image($model, $name, 'project', array('width' => 150, 'height' => 150));
     }
 
     /**
@@ -71,6 +51,27 @@ class FileHelper {
     public static function upload_with_model($model, $name) {
         $uploadedFile = CUploadedFile::getInstance($model, $name);
         return $uploadedFile;
+    }
+
+    /**
+     * fungsi buat upload semua gambar dan di resize
+     * @param Model $model modelnya
+     * @param String $name attribut dari table yang berisi image
+     * @param String $folder_name 
+     * @param Array $size array('width' => 12,'height' => 13)
+     */
+    public static function upload_image($model, $name, $folder_name, $size) {
+        Yii::import('application.extensions.image.Image');
+        $upload_file = self::upload_with_model($model, $name);
+        if (!empty($upload_file)) {
+            $model->$name = $upload_file->name;
+            $image_location = Yii::getPathOfAlias('webroot') . '/files/images/'.$folder_name.'/' . $upload_file->name;
+            $upload_file->saveAs($image_location);
+            self::resize_image($size['width'], $size['height'], $image_location);
+            return $uploadedFile->name;
+        } else {
+            return '';
+        }
     }
 
     /**

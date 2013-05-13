@@ -41,6 +41,7 @@ class task_type extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('task_type_name, task_type_color', 'required'),
+                    array('task_type_icon', 'file', 'allowEmpty' => true, 'types' => 'jpg,jpeg,gif,png'),
 			array('task_type_name, task_type_icon', 'length', 'max'=>45),
 			array('task_type_color', 'length', 'max'=>10),
 			// The following rule is used by search().

@@ -3,12 +3,11 @@
 /* @var $model task_type */
 
 $this->breadcrumbs=array(
-	'Task Types'=>array('index'),
+	'Task Types'=>array('admin'),
 	'Create',
 );
 
 $this->menu=array(
-	array('label'=>'List task_type', 'url'=>array('index')),
 	array('label'=>'Manage task_type', 'url'=>array('admin')),
 );
 ?>

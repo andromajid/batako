@@ -70,7 +70,8 @@ class EColorPicker extends CInputWidget
     * @var <type>
     */
    public $value = '000000';
-
+   public $model;
+   public $attribute;
    /**
     * Whatever if the color values are filled in the fields while changing
     * values on selector or a field. If false it may improve speed. Default true

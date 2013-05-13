@@ -29,35 +29,39 @@
 
     <div class="row">
         <?php echo $form->labelEx($model, 'task_type_color'); ?>
-        <?php
-        $this->widget('application.widget.colorpicker.EColorPicker', array(
-            'name' => 'cp',
-            'mode' => 'textfield',
-            'fade' => false,
-            'slide' => false,
-            'curtain' => true,
-        ));
-        ?>
-<?php echo $form->textField($model, 'task_type_color', array('size' => 10, 'maxlength' => 10)); ?>
+        <div class="input-prepend">
+            <span class="add-on">#</span>
+            <?php
+            $this->widget('application.widget.colorpicker.EColorPicker', array(
+                'model' => $model,
+                'attribute' => 'task_type_color',
+                'mode' => 'textfield',
+                'fade' => false,
+                'slide' => false,
+                'curtain' => true,
+            ));
+            ?>
+        </div>
     </div>
 
     <div class="row">
         <?php
         if (!$model->isNewRecord &&
-                is_file(Yii::getPathOfAlias('webroot') . '/files/images/' . $model->task_type_icon)) {
-            $link = '<div style="margin-left:173px;margin-top:-9px;"/>' . CHtml::link('avatar', Yii::app()->baseUrl . '/files/images/user/' . $model->task_type_icon, array('target' => '_blank')) . "</div>";
+                is_file(Yii::getPathOfAlias('webroot') . '/files/images/task/' . $model->task_type_icon)) {
+            $link = '<div style="margin-left:173px;margin-top:-9px;"/>' . CHtml::link('avatar', Yii::app()->baseUrl . '/files/images/task/' . $model->task_type_icon, array('target' => '_blank')) . "</div>";
         }
         else
             $link = '';
         ?>
         <?php echo $form->labelEx($model, 'task_type_icon'); ?>
-<?php echo $form->fileField($model, 'task_type_icon');
-echo $link;
-?>
+        <?php
+        echo $form->fileField($model, 'task_type_icon');
+        echo $link;
+        ?>
     </div>
 
     <div class="row buttons">
-    <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('class' => 'btn btn-primary')); ?>
+<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('class' => 'btn btn-primary')); ?>
     </div>
 
 <?php $this->endWidget(); ?>

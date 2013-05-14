@@ -223,3 +223,7 @@ input[type="file"] {
 .avatar img {
     width: 150px;
 }
+.redactor_box, .redactor_box textarea {
+    float:left;
+    margin-bottom: 15px;
+}

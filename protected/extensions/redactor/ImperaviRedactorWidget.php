@@ -89,40 +89,11 @@ class ImperaviRedactorWidget extends CInputWidget {
      * Register CSS and Script.
      */
     protected function registerClientScript() {
-        $this->elfinder();
-        $option = array_merge($this->options, array('callback' => "js:function(obj){
-            obj.addBtnBefore('image', 'button1', 'Button Before', function() { 
-                var dialog;
-                var el = this;
-                if (!dialog) {
-            dialog = $('<div />').dialogelfinder({
-                url: '" . Yii::app()->getController()->createUrl('/admin/file/connector') . "',
-                commandsOptions: {
-                    getfile: {
-                        oncomplete : 'close' // close/hide elFinder
-                    }
-                },
-                getFileCallback: function(file) {
-                    console.log($.redactor);
-                    image = '<img src=\"'+file+'\">';
-                   // RedactorPlugins.insertHtml(image);
-                  obj.insertHtml('<img src=\"'+file+'\">');
-                  // console.log(dialog.url);
-                } // pass callback to file manager
-            });
-//             console.log(RedactorPlugins.elfinder);
-            //this.insertHtml(RedactorPlugins.elfinder);
-        } else {
-            // reopen elFinder
-            dialog.dialogelfinder('open')
-        }
-            });
-            obj.addBtnSeparatorAfter('button1');}"));
         Yii::app()->clientScript
                 ->addPackage(self::PACKAGE_ID, $this->package)
                 ->registerPackage(self::PACKAGE_ID)
                 ->registerScript(
-                        $this->id, 'jQuery(' . CJavaScript::encode($this->selector) . ').redactor(' . CJavaScript::encode($option) . ');', CClientScript::POS_READY
+                        $this->id, 'jQuery(' . CJavaScript::encode($this->selector) . ').redactor(' . CJavaScript::encode($this->options) . ');', CClientScript::POS_READY
         );
         Yii::app()->clientScript
                 ->addPackage(self::PACKAGE_ID, $this->package)

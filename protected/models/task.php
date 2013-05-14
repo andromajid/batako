@@ -87,7 +87,7 @@ class task extends CActiveRecord {
             'task_description' => 'Task Description',
             'task_point' => 'Task Point',
             'task_creator_user_id' => 'Task Creator User',
-            'task_assign_user_id' => 'Task Assign User',
+            'task_assign_user_id' => 'Assign User',
             'task_create_datetime' => 'Task Create Datetime',
             'task_start_datetime' => 'Task Start Datetime',
             'task_end_datetime' => 'Task End Datetime',

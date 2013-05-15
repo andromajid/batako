@@ -129,5 +129,11 @@ class task extends CActiveRecord {
         ));
     }
     /**
+     * fungsi buat ambil semua task dari prject
+     * @param Int  $project_id
      */
+    public function getAllTaskFromProject($project_id) {
+        $data = Yii::app()->db->createCommand()->from('task')->where('task_project_id=:project_id', array(':project_id' => $project_id))->queryAll();
+        return $data;
+    }
 }

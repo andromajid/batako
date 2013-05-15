@@ -57,13 +57,17 @@ Yii::app()->getClientScript()->registerScript('timepicker', '
             </span>
         </div>
     </div>
+    <div class="row"> 
+        <?php echo $form->labelEx($file, 'file_name'); ?>
+        <?php echo CHtml::fileField('file_name[]', '', array('multiple' => 'multiple')); ?>
+    </div> 
     <div class="row">
         <?php echo $form->labelEx($model, 'task_task_type_id'); ?>
         <?php echo $form->dropDownList($model, 'task_task_type_id', CHtml::listData(task_type::model()->findAll(), 'task_type_id', 'task_type_name'), array('empty' => 'select task type')); ?>
     </div>
     <div class="row">
         <?php echo $form->labelEx($model, 'task_progress'); ?>
-        <?php echo $form->textField($model, 'task_progress', array('readonly' => 'readonly','size' => 2, 'maxlength' => 3,'style' => 'width:25px;float:left;margin-right:4px;')); ?>
+        <?php echo $form->textField($model, 'task_progress', array('readonly' => 'readonly', 'size' => 2, 'maxlength' => 3, 'style' => 'width:25px;float:left;margin-right:4px;')); ?>
         <?php
         $this->widget('zii.widgets.jui.CJuiSlider', array(
             'value' => 0,
@@ -72,7 +76,7 @@ Yii::app()->getClientScript()->registerScript('timepicker', '
                 'min' => 0,
                 'max' => 100,
                 'slide' => 'js:function(event, ui) {
-                    jQuery("#'.CHtml::activeId($model, 'task_progress').'").val(ui.value);
+                    jQuery("#' . CHtml::activeId($model, 'task_progress') . '").val(ui.value);
                 }'
             ),
             'htmlOptions' => array(
@@ -82,9 +86,9 @@ Yii::app()->getClientScript()->registerScript('timepicker', '
         ?>
     </div>
     <div class="row buttons">
-    <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Update', array('class' => 'btn btn-primary')); ?>
+        <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Update', array('class' => 'btn btn-primary')); ?>
     </div>
 
-<?php $this->endWidget(); ?>
+    <?php $this->endWidget(); ?>
 
 </div><!-- form -->

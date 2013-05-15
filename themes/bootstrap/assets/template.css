@@ -227,3 +227,6 @@ input[type="file"] {
     float:left;
     margin-bottom: 15px;
 }
+.muted {
+    color: #000;
+}

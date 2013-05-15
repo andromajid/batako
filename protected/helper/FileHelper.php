@@ -65,7 +65,7 @@ class FileHelper {
         $upload_file = self::upload_with_model($model, $name);
         if (!empty($upload_file)) {
             $model->$name = $upload_file->name;
-            $image_location = Yii::getPathOfAlias('webroot') . '/files/images/'.$folder_name.'/' . $upload_file->name;
+            $image_location = Yii::getPathOfAlias('webroot') . '/files/images/' . $folder_name . '/' . $upload_file->name;
             $upload_file->saveAs($image_location);
             self::resize_image($size['width'], $size['height'], $image_location);
             return $uploadedFile->name;
@@ -84,6 +84,26 @@ class FileHelper {
         $image = new Image($image_location);
         $image->resize($width, $height, Image::NONE)->quality(75)->sharpen(20);
         $image->save();
+    }
+
+    /**
+     * fungsi buat menghandle html5 file upload
+     * @param Object $files $_FILES 
+     * @param String $attribute attribut html dari input file
+     * @return array
+     */
+    public static function massUpload($file, $attribute) {
+        $array_file = array();
+        if (is_array($file[$attribute])) {
+            foreach ($file[$attribute]['name'] as $number => $value) {
+                $file_dir = Yii::getPathOfAlias('webroot') . '/files/' . $value;
+                move_uploaded_file($file[$attribute]['tmp_name'][$number], $file_dir);
+                Yii::app()->db->createCommand()->insert('file', array('file_name' => $value,
+                    'file_mime' => $file[$attribute]['type'][$number]));
+                $array_file[] = yii::app()->db->getLastInsertID();
+            }
+        }
+        return $array_file;
     }
 
 }

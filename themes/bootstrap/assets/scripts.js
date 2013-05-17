@@ -16,4 +16,7 @@ $(function() {
 	   	$('.hide-sidebar').show();
 	  	$('#sidebar').show('fast');
 	});
+        $('.slide-card').bind('click', function(){
+            $(this).parent().find('.block-content').slideToggle(10);
+        });
 });

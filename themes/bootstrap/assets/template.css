@@ -230,3 +230,43 @@ input[type="file"] {
 .muted {
     color: #000;
 }
+.card-block {
+    position:relative;
+    border-radius: 15px;
+}
+.text-muted {
+    position: absolute;
+    top: 10px;
+    left : 10px;
+}
+.card-header {
+    opacity: 0.4;
+    background-image: none;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+}
+.slide-card {
+    position: absolute;
+    top: 15px;
+    right: 8px;
+    display: inline-block;
+    width: 0;
+    cursor: pointer;
+    height: 0;
+    vertical-align: top;
+    border-top: 12px solid #000;
+    border-right: 7px solid transparent;
+    border-left: 7px solid transparent;
+    content: "";
+}
+table.card-table td {
+    min-width: 95px;
+}
+.image-tool {
+    float: right;
+    margin-right: 10px;
+    margin-bottom: 5px;
+}
+.card-detail tr td:first-child {
+    width: 175px;
+}

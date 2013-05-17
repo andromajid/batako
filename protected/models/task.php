@@ -136,4 +136,12 @@ class task extends CActiveRecord {
         $data = Yii::app()->db->createCommand()->from('task')->where('task_project_id=:project_id', array(':project_id' => $project_id))->queryAll();
         return $data;
     }
+    /**
+     * fungsi buat ngambil data task berdasar task_id
+     * @param Int $task_id
+     */
+    public function getTaskById($task_id) {
+        $feedback = Yii::app()->db->createCommand()->from('task')->where('task_id=:task_id', array(':task_id' => $task_id))->queryRow();
+        return $feedback;
+    }
 }

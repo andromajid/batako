@@ -12,7 +12,7 @@
  */
 class TaskController extends adminController {
 
-    public $layout = '//layouts/column1';
+    public $layout = '//layouts/column2';
 
     //put your code here
     public function actionCreate($project_id) {
@@ -49,6 +49,7 @@ class TaskController extends adminController {
      * @param Int $project_id
      */
     public function actionProject($project_id) {
+        $this->layout = '//layouts/column1';
         yii::import('application.helper.html');
         $this->title = "Create Task";
         $data_project = project::model()->getProjectById($project_id);
@@ -58,7 +59,16 @@ class TaskController extends adminController {
         $task_project = task::model()->getAllTaskFromProject($project_id);
         $this->render('task_project', array('task_project' => $task_project));
     }
-
+    /**
+     * buat melihat data task 
+     * @param Int $task_id
+     */
+    public function actionView($task_id) {
+        $task = task::model()->getTaskById($task_id);
+        if(!$task)
+            throw new CHttpException(404, 'The requested page does not exist.');
+        $this->render('task_view', array('task' => $task));
+    }
 }
 
 ?>

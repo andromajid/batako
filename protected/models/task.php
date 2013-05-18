@@ -103,28 +103,7 @@ class task extends CActiveRecord
 			'task_progress' => 'Task Progress',
 		);
 	}
-
-    /**
-     * @return array customized attribute labels (name=>label)
-     */
-    public function attributeLabels() {
-        return array(
-            'task_id' => 'Task',
-            'task_title' => 'Task Title',
-            'task_description' => 'Task Description',
-            'task_point' => 'Task Point',
-            'task_creator_user_id' => 'Task Creator User',
-            'task_assign_user_id' => 'Assign User',
-            'task_create_datetime' => 'Task Create Datetime',
-            'task_start_datetime' => 'Task Start Datetime',
-            'task_end_datetime' => 'Task End Datetime',
-            'task_estimate_hour' => 'Task Estimate Hour',
-            'task_project_id' => 'Task Project',
-            'task_task_type_id' => 'Task Task Type',
-            'task_is_end' => 'Task Is End',
-            'task_progress' => 'Task Progress',
-        );
-    }
+        public function search() {
 
 		$criteria=new CDbCriteria;
 
@@ -142,22 +121,6 @@ class task extends CActiveRecord
 		$criteria->compare('task_task_type_id',$this->task_task_type_id);
 		$criteria->compare('task_is_end',$this->task_is_end,true);
 		$criteria->compare('task_progress',$this->task_progress);
-
-        $criteria->compare('task_id', $this->task_id);
-        $criteria->compare('task_title', $this->task_title, true);
-        $criteria->compare('task_description', $this->task_description, true);
-        $criteria->compare('task_point', $this->task_point);
-        $criteria->compare('task_creator_user_id', $this->task_creator_user_id);
-        $criteria->compare('task_assign_user_id', $this->task_assign_user_id);
-        $criteria->compare('task_create_datetime', $this->task_create_datetime, true);
-        $criteria->compare('task_start_datetime', $this->task_start_datetime, true);
-        $criteria->compare('task_end_datetime', $this->task_end_datetime, true);
-        $criteria->compare('task_estimate_hour', $this->task_estimate_hour);
-        $criteria->compare('task_project_id', $this->task_project_id);
-        $criteria->compare('task_task_type_id', $this->task_task_type_id);
-        $criteria->compare('task_is_end', $this->task_is_end, true);
-        $criteria->compare('task_progress', $this->task_progress);
-
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));

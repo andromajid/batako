@@ -26,6 +26,7 @@ class TaskController extends adminController {
             $task->attributes = $_POST['task'];
             if ($task->validate()) {
                 $task->task_project_id = $project_id;
+                $task->task_create_datetime = date("Y-m-d H:i:s");
                 $task->save(false);
                 //upload multiple file
                 Yii::import('application.helper.FileHelper');
@@ -67,7 +68,10 @@ class TaskController extends adminController {
         $task = task::model()->getTaskById($task_id);
         if(!$task)
             throw new CHttpException(404, 'The requested page does not exist.');
-        $this->render('task_view', array('task' => $task));
+        //ambil task filenya
+        $file = task_file::model()->getFileByTaskId($task_id);
+        $this->render('task_view', array('task' => $task,
+                                         'file' => $file,));
     }
 }
 

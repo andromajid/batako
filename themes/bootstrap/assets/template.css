@@ -270,3 +270,7 @@ table.card-table td {
 .card-detail tr td:first-child {
     width: 175px;
 }
+.card-detail ul li {
+    list-style: none;
+    margin-bottom: 5px;
+}

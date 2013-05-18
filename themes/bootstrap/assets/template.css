@@ -281,3 +281,18 @@ table.card-table td {
     border-radius: 10px;
     border: 1px #ccc solid;
 }
+.img-comment {
+    float: left;
+}
+.comment-content {
+    float:left;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+.comment-box ul {
+    margin: 6px 0px 0px 0px;
+    float:left;
+}
+.comment-content {
+    min-height: 75px;
+}

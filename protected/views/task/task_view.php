@@ -1,6 +1,6 @@
 <?php
 if ($model->hasErrors()) {
-    echo '<div class="alert alert-danger">' . $form->errorSummary($model) . '</div>';
+    echo '<div class="alert alert-danger">' . CHtml::errorSummary($model). '</div>';
 }
 ?>
 <div class="tabbable"> <!-- Only required for left/right tabs -->
@@ -99,7 +99,8 @@ if ($model->hasErrors()) {
             </div>
         </div>
         <div class="tab-pane" id="tab2">
-            <?php $this->renderPartial('task_form', array('model' => $model))?>
+            <?php $this->renderPartial('task_form', array('model' => $model,
+                                                          'comment' => $comment))?>
         </div>
     </div>
 </div>

@@ -60,30 +60,53 @@ class TaskController extends adminController {
         $task_project = task::model()->getAllTaskFromProject($project_id);
         $this->render('task_project', array('task_project' => $task_project));
     }
+
     /**
      * buat melihat data task 
      * @param Int $task_id
      */
     public function actionView($task_id) {
-        if(isset($_POST['submit_comment'])) {
-            
-        }
         $task = task::model()->getTaskById($task_id);
         $task_comment = new task_comment;
-        if(!$task)
+        if (!$task)
             throw new CHttpException(404, 'The requested page does not exist.');
+
+        if (isset($_POST['submit_comment'])) {
+            $task_comment->task_comment_text = preg_replace('/[\s]+/', '', $_POST['task_comment']['task_comment_text']);
+            $task_comment->task_comment_datetime = date("Y-m-d H:i:s");
+            $task_comment->task_comment_task_id = $task_id;
+            $task_comment->task_comment_user_id = $this->admin_auth->user_id;
+            if ($task_comment->validate()) {
+                $task_comment->save(false);
+                Yii::import('application.helper.FileHelper');
+                $file_id = FileHelper::massUpload($_FILES, 'file_name');
+                //add ke task file
+                foreach ($file_id as $row_file_id) {
+                    Yii::app()->db->createCommand()->insert('task_comment_file', array('task_comment_file_task_comment_id' => $task_comment->task_comment_id,
+                        'task_comment_file_file_id' => $row_file_id));
+                }
+                //$this->redirect(array('view', 'id' => $model->project_id));
+                Yii::app()->user->setFlash('success', 'Succed adding comment');
+                $this->refresh();
+            }
+        }
         //ambil task filenya
         $file = task_file::model()->getFileByTaskId($task_id);
+        //ambil comment-nya
+        $comment = task_comment::model()->getCommentByTaskId($task_id);
         $this->render('task_view', array('task' => $task,
-                                         'file' => $file,
-                                         'model' => $task_comment));
+            'file' => $file,
+            'model' => $task_comment,
+            'comment' => $comment));
     }
+
     /**
      * Method buat update progress via ajax
      */
     public function actionUpdate_progress() {
         Yii::app()->db->createCommand()->update('task', array('task_progress' => $_POST['progress_task']), 'task_id=:id', array(':id' => $_POST['task_id']));
     }
+
 }
 
 ?>

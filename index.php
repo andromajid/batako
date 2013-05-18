@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL & ~ E_NOTICE);
+error_reporting(E_ALL);
 date_default_timezone_set('Asia/Jakarta');
 // change the following paths if necessary
 $yii=dirname(__FILE__).'/framework/yii.php';

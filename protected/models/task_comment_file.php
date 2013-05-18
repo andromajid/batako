@@ -11,82 +11,86 @@
  * @property File $taskCommentFileFile
  * @property TaskComment $taskCommentFileTaskComment
  */
-class task_comment_file extends CActiveRecord
-{
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return task_comment_file the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
+class task_comment_file extends CActiveRecord {
 
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'task_comment_file';
-	}
+    /**
+     * Returns the static model of the specified AR class.
+     * @param string $className active record class name.
+     * @return task_comment_file the static model class
+     */
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('task_comment_file_task_comment_id, task_comment_file_file_id', 'required'),
-			array('task_comment_file_task_comment_id, task_comment_file_file_id', 'numerical', 'integerOnly'=>true),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('task_comment_file_task_comment_id, task_comment_file_file_id', 'safe', 'on'=>'search'),
-		);
-	}
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName() {
+        return 'task_comment_file';
+    }
 
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'taskCommentFileFile' => array(self::BELONGS_TO, 'File', 'task_comment_file_file_id'),
-			'taskCommentFileTaskComment' => array(self::BELONGS_TO, 'TaskComment', 'task_comment_file_task_comment_id'),
-		);
-	}
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('task_comment_file_task_comment_id, task_comment_file_file_id', 'required'),
+            array('task_comment_file_task_comment_id, task_comment_file_file_id', 'numerical', 'integerOnly' => true),
+            // The following rule is used by search().
+            // Please remove those attributes that should not be searched.
+            array('task_comment_file_task_comment_id, task_comment_file_file_id', 'safe', 'on' => 'search'),
+        );
+    }
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'task_comment_file_task_comment_id' => 'Task Comment File Task Comment',
-			'task_comment_file_file_id' => 'Task Comment File File',
-		);
-	}
+    /**
+     * @return array relational rules.
+     */
+    public function relations() {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'taskCommentFileFile' => array(self::BELONGS_TO, 'File', 'task_comment_file_file_id'),
+            'taskCommentFileTaskComment' => array(self::BELONGS_TO, 'TaskComment', 'task_comment_file_task_comment_id'),
+        );
+    }
 
-	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
-	 */
-	public function search()
-	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels() {
+        return array(
+            'task_comment_file_task_comment_id' => 'Task Comment File Task Comment',
+            'task_comment_file_file_id' => 'Task Comment File File',
+        );
+    }
 
-		$criteria=new CDbCriteria;
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+     */
+    public function search() {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
 
-		$criteria->compare('task_comment_file_task_comment_id',$this->task_comment_file_task_comment_id);
-		$criteria->compare('task_comment_file_file_id',$this->task_comment_file_file_id);
+        $criteria = new CDbCriteria;
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
+        $criteria->compare('task_comment_file_task_comment_id', $this->task_comment_file_task_comment_id);
+        $criteria->compare('task_comment_file_file_id', $this->task_comment_file_file_id);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
+    /**
+     * Fungsi buat ngambil data file berdasar comment_id
+     * @param Int $comment_id 
+     */
+    public function getTaskFileByCommentId($comment_id) {
+        $data = Yii::app()->db->createCommand()->from('task_comment_file')->leftJoin('file', 'file_id=task_comment_file_file_id')
+                          ->where('task_comment_file_task_comment_id=:comment_id', array(':comment_id' => $comment_id))->queryAll();
+        return $data;
+    }
 }

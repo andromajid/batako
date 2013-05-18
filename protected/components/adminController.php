@@ -25,7 +25,7 @@ class adminController extends CController {
     public function __construct($id, $module = null) {
         parent::__construct($id, $module);
         Yii::app()->theme = 'bootstrap';
-//        $this->admin_auth = new adminAuth();
+        $this->admin_auth = new adminAuth();
 //        $data_sesi = $this->admin_auth->authAdmin();
 //        $data_password = $this->admin_auth->checkPassword();
 //        if ($data_sesi['error'] || $data_password['error']) {

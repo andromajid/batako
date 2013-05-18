@@ -106,15 +106,5 @@ class project extends CActiveRecord {
             'criteria' => $criteria,
         ));
     }
-    /**
-     * Buat ambil data project
-     * @param Int $project_id primary key
-     */
-    public function getProjectById($project_id) {
-        $data = Yii::app()->db->createCommand()->from('project')->where('project_id=:id', array(':id' => $project_id))->queryRow();
-        if($data) 
-            return $data;
-        else
-            return false;
-    }
+
 }

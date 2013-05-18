@@ -5,7 +5,7 @@
  */
 class adminAuth {
 
-    public $auth_name = 'member';
+    public $auth_name = 'admin';
 
     public function __construct() {
         if (!session_id()) {
@@ -84,20 +84,21 @@ class adminAuth {
     }
 
     public function login($username, $password) {
-        $data_model = Yii::app()->db->createCommand()->from('user')->where('username=:username', array(':username' => $username))
+        $data_model = Yii::app()->db->createCommand()->from('site_administrator')->where('admin_username=:admin_id', array(':admin_id' => $username))
                 ->queryRow();
         if (isset($data_model)) {
-            if ($data_model['user_is_active'] == '0') {
+            if ($data_model['admin_is_active'] == '0') {
                 return array('error' => true, 'message' => 'username : ' . $username . ' tidak aktiv');
-            } elseif (md5($password) != $data_model['user_password']) {
+            } elseif (md5($password) != $data_model['admin_password']) {
                 return array('error' => true, 'message' => 'password salah');
             } else {
                 //update last loginnya
-                $data_arr = array('user_id' => $data_model['user_id'],
-                    'username' => $data_model['username'],
-                    'user_password' => $data_model['user_password'],
-                    'user_is_administrator' => $data_model['user_is_administrator'],
-                    'user_role_user_role_id' => $data_model['user_role_user_role_id'],);
+                Yii::app()->db->createCommand()->update('site_administrator', array('admin_last_login' => date('Y-m-d H:i:s')), 'admin_id=:admin_id', array(':admin_id' => $data_model['admin_id']));
+                $data_arr = array('admin_id' => $data_model['admin_id'],
+                    'admin_username' => $data_model['admin_username'],
+                    'admin_password' => $data_model['admin_password'],
+                    'admin_group_id' => $data_model['admin_group_id'],
+                    'admin_group_title' => dbHelper::getOne('admin_group_title', 'site_administrator_group', 'admin_group_id=\'' . $data_model['admin_group_id'] . '\''));
                 $_SESSION[$this->auth_name] = $data_arr;
                 return array('error' => false, 'message success');
             }

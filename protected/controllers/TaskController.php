@@ -65,13 +65,24 @@ class TaskController extends adminController {
      * @param Int $task_id
      */
     public function actionView($task_id) {
+        if(isset($_POST['submit_comment'])) {
+            
+        }
         $task = task::model()->getTaskById($task_id);
+        $task_comment = new task_comment;
         if(!$task)
             throw new CHttpException(404, 'The requested page does not exist.');
         //ambil task filenya
         $file = task_file::model()->getFileByTaskId($task_id);
         $this->render('task_view', array('task' => $task,
-                                         'file' => $file,));
+                                         'file' => $file,
+                                         'model' => $task_comment));
+    }
+    /**
+     * Method buat update progress via ajax
+     */
+    public function actionUpdate_progress() {
+        Yii::app()->db->createCommand()->update('task', array('task_progress' => $_POST['progress_task']), 'task_id=:id', array(':id' => $_POST['task_id']));
     }
 }
 

@@ -274,3 +274,10 @@ table.card-table td {
     list-style: none;
     margin-bottom: 5px;
 }
+.form-comment {
+    margin-top: 10px;
+    display: none;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px #ccc solid;
+}

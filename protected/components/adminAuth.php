@@ -87,14 +87,13 @@ class adminAuth {
         $data_model = Yii::app()->db->createCommand()->from('user')->where('username=:admin_id', array(':admin_id' => $username))
                 ->queryRow();
         if (isset($data_model)) {
-            if ($data_model['admin_is_active'] == '0') {
-                return array('error' => true, 'message' => 'username : ' . $username . ' tidak aktiv');
-            } elseif (md5($password) != $data_model['user_password']) {
+           if (md5($password) != $data_model['user_password']) {
                 return array('error' => true, 'message' => 'password salah');
             } else {
                 //update last loginnya
                $data_arr = array('user_id' => $data_model['user_id'],
                     'username' => $data_model['username'],
+                    'user_is_administrator' => $data_model['user_is_administrator'],
                     'user_role' => dbHelper::getOne('user_role_name', 'user_role', 'user_role_id=\'' . $data_model['user_role_user_role_id'] . '\''));
                 $_SESSION[$this->auth_name] = $data_arr;
                 return array('error' => false, 'message success');

@@ -87,7 +87,7 @@ class TaskController extends adminController {
                 }
                 //$this->redirect(array('view', 'id' => $model->project_id));
                 Yii::app()->user->setFlash('success', 'Succed adding comment');
-                $this->refresh();
+                $this->redirect('/task/view/', array('task_id' => $task_id));
             }
         }
         //ambil task filenya
@@ -106,7 +106,31 @@ class TaskController extends adminController {
     public function actionUpdate_progress() {
         Yii::app()->db->createCommand()->update('task', array('task_progress' => $_POST['progress_task']), 'task_id=:id', array(':id' => $_POST['task_id']));
     }
-
+    /**
+     * fungsi buat update comment
+     * @param Int $comment_id
+     */
+    public function actionUpdate_comment($comment_id) {
+        $this->title = 'Update Comment';
+        $comment = task_comment::model()->find('task_comment_id=:comment_id', array(':comment_id' => $comment_id));
+        if($comment == null){
+            throw new CHttpException(404, 'Page Not Found');
+        } 
+        if(($this->admin_auth->user_id != $comment->task_comment_user_id)) {
+            if($this->admin_auth->user_is_administrator == '0') 
+                throw new CHttpException(404, 'Page Not Found');
+        }
+        $file = task_comment_file::model()->getTaskFileByCommentId($comment_id);
+        $this->render('comment_update', array('model' => $comment,
+                                              'file' => $file));
+    }
+    /**
+     * buat action file delete
+     */
+    public function actionFile_delete() {
+        
+        $file_path = Yii::getPathOfAlias('webroot').'/files/'.;
+    }
 }
 
 ?>

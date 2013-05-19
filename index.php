@@ -1,4 +1,5 @@
 <?php
+session_name('BATAKO');
 error_reporting(E_ALL);
 date_default_timezone_set('Asia/Jakarta');
 // change the following paths if necessary

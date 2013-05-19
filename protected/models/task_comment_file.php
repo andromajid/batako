@@ -52,7 +52,7 @@ class task_comment_file extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'taskCommentFileFile' => array(self::BELONGS_TO, 'File', 'task_comment_file_file_id'),
-            'taskCommentFileTaskComment' => array(self::BELONGS_TO, 'TaskComment', 'task_comment_file_task_comment_id'),
+            'taskCommentFiles' => array(self::BELONGS_TO, 'task_comment', 'task_comment_file_task_comment_id'),
         );
     }
 
@@ -89,7 +89,7 @@ class task_comment_file extends CActiveRecord {
      * @param Int $comment_id 
      */
     public function getTaskFileByCommentId($comment_id) {
-        $data = Yii::app()->db->createCommand()->from('task_comment_file')->leftJoin('file', 'file_id=task_comment_file_file_id')
+        $data = Yii::app()->db->createCommand()->from('task_comment_file')->rightJoin('file', 'file_id=task_comment_file_file_id')
                           ->where('task_comment_file_task_comment_id=:comment_id', array(':comment_id' => $comment_id))->queryAll();
         return $data;
     }

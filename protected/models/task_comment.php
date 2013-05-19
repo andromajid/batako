@@ -56,9 +56,9 @@ class task_comment extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'taskCommentTask' => array(self::BELONGS_TO, 'Task', 'task_comment_task_id'),
-            'taskCommentUser' => array(self::BELONGS_TO, 'User', 'task_comment_user_id'),
-            'taskCommentFiles' => array(self::HAS_MANY, 'TaskCommentFile', 'task_comment_file_task_comment_id'),
+            'taskCommentTask' => array(self::BELONGS_TO, 'task', 'task_id'),
+            'taskCommentUser' => array(self::BELONGS_TO, 'user', 'user_id'),
+            'taskCommentFile' => array(self::HAS_MANY, 'task_comment_file', 'task_comment_file_task_comment_id'),
         );
     }
 

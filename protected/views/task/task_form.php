@@ -37,10 +37,21 @@ echo CHtml::button('create comment', array('class' => 'btn btn-success',
 </div><!-- form -->
 <?php if (is_array($comment)): ?>
     <?php foreach ($comment as $row_comment): ?>
-        <div class="block span8 comment-box">
+        <?php
+        //buat edit diri sendiri maupun administrator
+        if($row_comment['task_comment_user_id'] == $this->admin_auth->user_id || $this->admin_auth->user_is_administrator == '1') {
+            $edit_icon = '<div class="pull-right">
+                                <a data-toggle="tooltip" title="Update This Comment" href="'.$this->createUrl('/task/update_comment', array('comment_id' => $row_comment['task_comment_id'])).'"><i class="icon-pencil"></i></a>
+                                <i class="icon-remove-sign"></i>
+                                    </div>';
+        } else 
+            $edit_icon = '';
+        ?>
+        <div class="block span11 comment-box">
             <div class="navbar navbar-inner block-header">
                 <div class="muted pull-left"><?php echo $row_comment['username']; ?> 
                     (<?php echo function_lib::convert_datetime($row_comment['task_comment_datetime'], 'char', "-") ?>)</div>
+                <?php echo $edit_icon;?>
             </div>
             <div class="block-content collapse in">
                 <div class="img-comment">
@@ -57,15 +68,16 @@ echo CHtml::button('create comment', array('class' => 'btn btn-success',
                 </div>
                 <?php
                 $file = task_comment_file::model()->getTaskFileByCommentId($row_comment['task_comment_id']);
-                if(isset($file) && is_array($file)):
+                if(isset($file) && is_array($file) && count($file) > 0):
                 ?>
                 <br class="clearfix"/>
                 <div style="float: left;">
-                <ul>
+                <h4>Attachment:</h4>
+                <ol>
                     <?php foreach($file as $row_file):?>
                         <li><?php echo CHtml::link($row_file['file_name'],Yii::app()->baseUrl.'/files/'.$row_file['file_name']);?></li>
                     <?php endforeach;?>
-                </ul>
+                </ol>
                 </div>
                 <?php endif;?>
             </div>

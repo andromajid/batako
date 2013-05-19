@@ -294,5 +294,21 @@ table.card-table td {
     float:left;
 }
 .comment-content {
+    word-wrap: break-word;
+    width: 82%;
     min-height: 75px;
+}
+.comment-box h4 {
+    margin-bottom: 0px;
+}
+.update_file_comment {
+   padding: 5px; 
+   height: 2em;
+   width: 35%;
+   margin-bottom: 4px;
+   border: solid 1px #ccc;
+   background-color: #e5e5e5;
+}
+.update_file_comment a {
+    margin-top: 4px;
 }

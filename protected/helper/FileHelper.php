@@ -96,11 +96,13 @@ class FileHelper {
         $array_file = array();
         if (is_array($file[$attribute])) {
             foreach ($file[$attribute]['name'] as $number => $value) {
-                $file_dir = Yii::getPathOfAlias('webroot') . '/files/' . $value;
-                move_uploaded_file($file[$attribute]['tmp_name'][$number], $file_dir);
-                Yii::app()->db->createCommand()->insert('file', array('file_name' => $value,
-                    'file_mime' => $file[$attribute]['type'][$number]));
-                $array_file[] = yii::app()->db->getLastInsertID();
+                if ($file[$attribute]['size'][$number] > 0) {
+                    $file_dir = Yii::getPathOfAlias('webroot') . '/files/' . $value;
+                    move_uploaded_file($file[$attribute]['tmp_name'][$number], $file_dir);
+                    Yii::app()->db->createCommand()->insert('file', array('file_name' => $value,
+                        'file_mime' => $file[$attribute]['type'][$number]));
+                    $array_file[] = yii::app()->db->getLastInsertID();
+                }
             }
         }
         return $array_file;

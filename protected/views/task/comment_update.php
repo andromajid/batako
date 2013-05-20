@@ -25,7 +25,7 @@
             <?php foreach($file as $row_file):?>
             <div class="update_file_comment"><?php echo CHtml::link($row_file['file_name'], Yii::app()->getBaseUrl().'/files/'.$row_file['file_name']);?>
                 <div class="pull-right"><?php echo CHtml::ajaxButton('Delete', $this->createUrl('/task/file_delete'), array('data' => "js:{file_id:".$row_file['file_id']."}",
-                            'type' => 'post'), array('class' => 'btn btn-danger'))?></div></div>
+                            'type' => 'post', 'success' => '$(this).parent().parent().remove()'), array('class' => 'btn btn-danger'))?></div></div>
             <?php endforeach;?>
         <?php endif;?>
     </div> 

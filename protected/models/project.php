@@ -107,7 +107,7 @@ class project extends CActiveRecord {
         ));
     }
     public function getProjectById($project_id) {
-        $data = Yii::app()->db->createCommand()->from('project')->where('project_id=:project_id', array(':project_id' => $project_id))->queryAll();
+        $data = Yii::app()->db->createCommand()->from('project')->where('project_id=:project_id', array(':project_id' => $project_id))->queryRow();
         return $data;
     }
 }

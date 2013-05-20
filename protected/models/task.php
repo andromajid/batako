@@ -76,7 +76,7 @@ class task extends CActiveRecord
 			'taskTaskType' => array(self::BELONGS_TO, 'TaskType', 'task_task_type_id'),
 			'taskCreatorUser' => array(self::BELONGS_TO, 'User', 'task_creator_user_id'),
 			'taskAssignUser' => array(self::BELONGS_TO, 'User', 'task_assign_user_id'),
-			'taskProject' => array(self::BELONGS_TO, 'Project', 'task_project_id'),
+			'taskProject' => array(self::BELONGS_TO, 'project', 'task_project_id'),
 			'taskSprints' => array(self::HAS_MANY, 'TaskSprint', 'task_task_id'),
 		);
 	}

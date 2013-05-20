@@ -91,7 +91,8 @@ class file extends CActiveRecord {
      * @param Int $file_id 
      */
     public function getFileByFileId($file_id) {
-        $data = Yii::app()->db->createCommand()->from('file')->where('file_id=:file_id', array(':file_id' => $file_id));
+        $data = Yii::app()->db->createCommand()->from('file')->where('file_id=:file_id', array(':file_id' => $file_id))->queryRow();
+        return $data;
     }
 
 }

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -16,10 +15,10 @@ class TaskController extends adminController {
 
     //put your code here
     public function actionCreate($project_id) {
-        $this->title = "Create Task";
         $data_project = project::model()->getProjectById($project_id);
         if (!$data_project)
             throw new CHttpException(404, 'The requested page does not exist.');
+        $this->title = "Buat Task Buat Project " . $data_project['project_name'];
         $task = new task;
         $file = new file;
         if (isset($_POST['task'])) {
@@ -42,6 +41,43 @@ class TaskController extends adminController {
         }
         $this->render('task_create', array('data_project' => $data_project,
             'model' => $task,
+            'file' => $file));
+    }
+
+    /**
+     * buat update task
+     * @param Int $project_id 
+     */
+    public function actionUpdate($task_id) {
+        $task = task::model()->findByPk($task_id);
+        if ($task == null)
+            throw new CHttpException('page not found', 404);
+        if (($this->admin_auth->user_id != $task->task_assign_user_id)) {
+            if ($this->admin_auth->user_is_administrator == '0')
+                throw new CHttpException(404, 'Page Not Found');
+        }
+        if (isset($_POST['task'])) {
+            $task->attributes = $_POST['task'];
+            if ($task->validate()) {
+                $task->save(false);
+                //upload multiple file
+                Yii::import('application.helper.FileHelper');
+                $file_id = FileHelper::massUpload($_FILES, 'file_name');
+                //add ke task file
+                foreach ($file_id as $row_file_id) {
+                    Yii::app()->db->createCommand()->insert('task_file', array('task_file_task_id' => $task->task_id,
+                        'task_file_file_id' => $row_file_id));
+                }
+                //$this->redirect(array('view', 'id' => $model->project_id));
+                Yii::app()->user->setFlash('success', 'Succed adding task');
+            }
+        }
+        //ambil semua filenya 
+        $file = new file;
+        $file_list = task_file::model()->getFileByTaskId($task_id);
+        $this->title = 'Update Task Pada Project ' . $task->taskProject->project_name;
+        $this->render('task_update', array('task' => $task,
+            'file_list' => $file_list,
             'file' => $file));
     }
 
@@ -106,6 +142,7 @@ class TaskController extends adminController {
     public function actionUpdate_progress() {
         Yii::app()->db->createCommand()->update('task', array('task_progress' => $_POST['progress_task']), 'task_id=:id', array(':id' => $_POST['task_id']));
     }
+
     /**
      * fungsi buat update comment
      * @param Int $comment_id
@@ -113,24 +150,56 @@ class TaskController extends adminController {
     public function actionUpdate_comment($comment_id) {
         $this->title = 'Update Comment';
         $comment = task_comment::model()->find('task_comment_id=:comment_id', array(':comment_id' => $comment_id));
-        if($comment == null){
+        if ($comment == null) {
             throw new CHttpException(404, 'Page Not Found');
-        } 
-        if(($this->admin_auth->user_id != $comment->task_comment_user_id)) {
-            if($this->admin_auth->user_is_administrator == '0') 
+        }
+        if (($this->admin_auth->user_id != $comment->task_comment_user_id)) {
+            if ($this->admin_auth->user_is_administrator == '0')
                 throw new CHttpException(404, 'Page Not Found');
+        }
+        //update data 
+        if (isset($_POST['submit_comment'])) {
+            $comment->attributes = $_POST['task_comment'];
+            if ($comment->validate()) {
+                $comment->save(false);
+                Yii::import('application.helper.FileHelper');
+                $file_id = FileHelper::massUpload($_FILES, 'file_name');
+                //add ke task file
+                foreach ($file_id as $row_file_id) {
+                    Yii::app()->db->createCommand()->insert('task_comment_file', array('task_comment_file_task_comment_id' => $comment->task_comment_id,
+                        'task_comment_file_file_id' => $row_file_id));
+                }
+                //$this->redirect(array('view', 'id' => $model->project_id));
+                Yii::app()->user->setFlash('success', 'Succed adding comment');
+            }
         }
         $file = task_comment_file::model()->getTaskFileByCommentId($comment_id);
         $this->render('comment_update', array('model' => $comment,
-                                              'file' => $file));
+            'file' => $file));
     }
+
     /**
      * buat action file delete
      */
     public function actionFile_delete() {
-        
-        $file_path = Yii::getPathOfAlias('webroot').'/files/'.;
+        if (isset($_POST['file_id'])) {
+            $file_id = $_POST['file_id'];
+            $file = file::model()->getFileByFileId($file_id);
+            $file_path = Yii::getPathOfAlias('webroot') . '/files/' . $file['file_name'];
+            if (is_readable($file_path)) {
+                //hapus di database dolo aja
+                $data = Yii::app()->db->createCommand()->delete('file', 'file_id=:file_id', array(':file_id' => $file_id));
+                if ($data) {
+                    @unlink($file_path);
+                }
+            }
+        }
+        else
+            throw new CHttpException('page not founf', 404);
     }
+
 }
+
+
 
 ?>

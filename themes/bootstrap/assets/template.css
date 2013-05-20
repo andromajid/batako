@@ -304,7 +304,7 @@ table.card-table td {
 .update_file_comment {
    padding: 5px; 
    height: 2em;
-   width: 35%;
+   min-width: 30% !important;
    margin-bottom: 4px;
    border: solid 1px #ccc;
    background-color: #e5e5e5;

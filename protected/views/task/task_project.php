@@ -30,7 +30,7 @@
                 </table>
             </div>
             <div class="image-tool">
-                <i class="icon-pencil"></i>
+                <a href="<?php echo $this->createUrl('/task/update', array('task_id' => $row['task_id']))?>"><i class="icon-pencil"></i></a>
                 <a href="<?php echo $this->createUrl('/task/view', array('task_id' => $row['task_id']));?>"><i class="icon-search"></i></a>
             </div>
         </div>

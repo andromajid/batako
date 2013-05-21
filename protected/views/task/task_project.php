@@ -13,7 +13,7 @@
             <div class="muted pull-left text-muted"><?php echo $row['task_title']; ?></div><b class="slide-card"></b>
 
             <div class="block-content collapse in">
-                <?php echo function_lib::wordPendekin($row['task_description'], 30); ?><br />
+                <?php //echo function_lib::wordPendekin($row['task_description'], 30); ?><br />
                 <table class="card-table">
                     <tr>
                         <td>Status</td>

@@ -312,3 +312,15 @@ table.card-table td {
 .update_file_comment a {
     margin-top: 4px;
 }
+.card-block {
+    width: 220px !important;
+}
+.card-place {
+    min-height: 150px;
+}
+.card-header {
+    cursor: move;
+}
+.card-block .muted {
+    cursor: move;
+}

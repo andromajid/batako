@@ -1,4 +1,2 @@
-skripsi
-=======
-
-tempat skripsi
+Batako is not a brick
+=====

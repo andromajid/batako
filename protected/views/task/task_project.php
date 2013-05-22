@@ -8,6 +8,7 @@
         }
         ?>
         <div class="block span3 draggable card-block">
+            <span class="card-hidden" style="display: none;"><?php echo $row['task_id'];?></span>
             <div class="navbar navbar-inner block-header card-header" style="background-color: #<?php echo $task_color;?>;">
             </div>
             <div class="muted pull-left text-muted"><?php echo $row['task_title']; ?></div><b class="slide-card"></b>

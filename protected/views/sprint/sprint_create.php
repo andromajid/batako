@@ -3,7 +3,7 @@ Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . '/js/tim
 Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . '/js/timepicker/timepicker.css');
 Yii::app()->getClientScript()->registerScript('timepicker', '
     jQuery(".' . CHtml::activeId($sprint, 'sprint_start_date') . ', .' . CHtml::activeId($sprint, 'sprint_end_date') . '").datetimepicker({pickTime:false,format:"yyyy-MM-dd"});
-'."$('.card-place').sortable({  
+' . "jQuery('.card-place').sortable({  
     connectWith: '.card-place',  
     handle: '.card-header,.muted',  
     cursor: 'move',  
@@ -14,7 +14,19 @@ Yii::app()->getClientScript()->registerScript('timepicker', '
         $(ui.item).find('.card-header').click();  
     }  
 })  
-.disableSelection();  " , CClientScript::POS_READY);
+.disableSelection();  
+jQuery('input.submit-sprint').bind('click', function() {
+    var task_id_arr = jQuery('.card-place-task .card-hidden');
+    task_id_arr.each(function(id) {
+        console.log(jQuery(task_id_arr[id]).text());
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'task_sprint[]';
+        input.value = jQuery(task_id_arr[id]).text();
+        jQuery('form').append(input);
+    });
+});
+", CClientScript::POS_READY);
 $this->widget('zii.widgets.jui.CJuiSortable', array(
     // additional javascript options for the JUI Sortable plugin
     'options' => array(
@@ -28,6 +40,11 @@ $this->widget('zii.widgets.jui.CJuiSortable', array(
         'enableAjaxValidation' => false,
         'htmlOptions' => array('enctype' => 'multipart/form-data'),
     ));
+    ?>
+    <?php
+    if ($sprint->hasErrors()) {
+        echo '<div class="alert alert-danger">' . $form->errorSummary($sprint) . '</div>';
+    }
     ?>
     <div class="row">
         <?php echo $form->labelEx($sprint, 'sprint_name'); ?>
@@ -50,6 +67,9 @@ $this->widget('zii.widgets.jui.CJuiSortable', array(
                 </i>
             </span>
         </div>
+    </div>
+    <div>
+        <?php echo CHtml::submitButton('Create Sprint', array('class' => 'btn btn-primary span3 submit-sprint','style' => 'margin:14px auto;display:block;padding:9px')) ?>
     </div>
     <h3>Sprint Task : </h3>
     <div class="span5">
@@ -74,12 +94,11 @@ $this->widget('zii.widgets.jui.CJuiSortable', array(
             <div class="navbar navbar-inner block-header">
                 <div class="muted pull-left">Sprint Task</div>
             </div>
-            <div class="block-content collapse in card-place">
+            <div class="block-content collapse in card-place card-place-task">
 
             </div>
         </div>
         <!-- /block -->
     </div>
-</div>
 <?php $this->endWidget(); ?>
 </div>

@@ -147,5 +147,13 @@ class task extends CActiveRecord {
         $feedback = Yii::app()->db->createCommand()->from('task')->where('task_id=:task_id', array(':task_id' => $task_id))->queryRow();
         return $feedback;
     }
+    /**
+     * Buat ngambil data semua task di sprint
+     * @param Int $sprint_id
+     */
+    public function getAllTaskBySprintId($sprint_id) {
+        $feedback = Yii::app()->db->createCommand()->from('task')->leftJoin('task_sprint', 'task_task_id = task_id')->where('sprint_sprint_id=:sprint_id', array(':sprint_id' => $sprint_id))->queryAll();
+        return $feedback;
+    }
 
 }

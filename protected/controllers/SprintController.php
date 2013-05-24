@@ -13,7 +13,7 @@
 class SprintController extends adminController {
      public $layout = '//layouts/column1';
     //put your code here
-    public function actionCreate($project_id) {
+    public function actionCreate() {
         $sprint = new sprint;
         if(isset($_POST['sprint'])) {
             $sprint->attributes = $_POST['sprint'];
@@ -28,11 +28,18 @@ class SprintController extends adminController {
                 }
             }
         }
-        $data_project = project::model()->getProjectById($project_id);
-        $task_project = task::model()->getAllTaskFromProject($project_id);
-        $this->title = 'Buat Sprint Pada Proyek '.$data_project['project_name'];
+        $task_project = task::model()->getAllTask();
+        $this->title = 'Buat Sprint';
         $this->render('sprint_create', array('sprint' => $sprint,
                                              'task_project' => $task_project));
+    }
+    /**
+     * fungsi buat view data sprint
+     */
+    public function actionView($id) {
+        $sprint = sprint::model()->with('taskSprints')->findByPk($id);
+        $this->title = $sprint->sprint_name;
+        $this->render('sprint_view',array('sprint' => $sprint));
     }
 }
 

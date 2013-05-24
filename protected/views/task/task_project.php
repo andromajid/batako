@@ -9,6 +9,7 @@
         ?>
         <div class="block span3 draggable card-block">
             <span class="card-hidden" style="display: none;"><?php echo $row['task_id'];?></span>
+            <span class="card-hidden-point" style="display: none;"><?php echo $row['task_point'];?></span>
             <div class="navbar navbar-inner block-header card-header" style="background-color: #<?php echo $task_color;?>;">
             </div>
             <div class="muted pull-left text-muted"><?php echo $row['task_title']; ?></div><b class="slide-card"></b>
@@ -23,6 +24,10 @@
                     <tr>
                         <td>Assignee</td>
                         <td><?php echo $row['task_assign_user_id'] == null?'':dbHelper::getOne('username', 'user', 'user_id='.$row['task_assign_user_id']);?></td>
+                    </tr>
+                    <tr>
+                        <td>Project</td>
+                        <td><?php echo $row['task_project_id'] == null?'':dbHelper::getOne('project_name', 'project', 'project_id='.$row['task_project_id']);?></td>
                     </tr>
                     <tr>
                         <td>Point</td>

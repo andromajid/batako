@@ -11,7 +11,7 @@
  * @property Task $taskTask
  * @property Sprint $sprintSprint
  */
-class taks_sprint extends CActiveRecord
+class task_sprint extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
@@ -54,7 +54,7 @@ class taks_sprint extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'taskTask' => array(self::BELONGS_TO, 'Task', 'task_task_id'),
+			'taskTask' => array(self::BELONGS_TO, 'task', 'task_task_id'),
 			'sprintSprint' => array(self::BELONGS_TO, 'Sprint', 'sprint_sprint_id'),
 		);
 	}

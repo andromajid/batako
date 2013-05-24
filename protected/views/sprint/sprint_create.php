@@ -11,7 +11,16 @@ Yii::app()->getClientScript()->registerScript('timepicker', '
     forcePlaceholderSize: true,  
     opacity: 0.4,  
     stop: function(event, ui){  
+        var total = 0;
         $(ui.item).find('.card-header').click();  
+        //hitung poin
+        var point_arr = jQuery('.card-place-task .card-hidden-point');
+        point_arr.each(function(id) {
+            var point = parseInt(jQuery(point_arr[id]).text());
+            total += point;
+        });
+        //update ke containernya
+        jQuery('.pull-right .badge-info').html(total);
     }  
 })  
 .disableSelection();  
@@ -69,7 +78,7 @@ $this->widget('zii.widgets.jui.CJuiSortable', array(
         </div>
     </div>
     <div>
-        <?php echo CHtml::submitButton('Create Sprint', array('class' => 'btn btn-primary span3 submit-sprint','style' => 'margin:14px auto;display:block;padding:9px')) ?>
+        <?php echo CHtml::submitButton('Create Sprint', array('class' => 'btn btn-primary span3 submit-sprint', 'style' => 'margin:14px auto;display:block;padding:9px')) ?>
     </div>
     <h3>Sprint Task : </h3>
     <div class="span5">
@@ -77,9 +86,7 @@ $this->widget('zii.widgets.jui.CJuiSortable', array(
         <div class="block">
             <div class="navbar navbar-inner block-header">
                 <div class="muted pull-left">Clients</div>
-                <div class="pull-right"><span class="badge badge-info">17</span>
 
-                </div>
             </div>
             <div class="block-content collapse in card-place">
                 <?php $this->renderPartial('//task/task_project', array('task_project' => $task_project)) ?>
@@ -93,6 +100,9 @@ $this->widget('zii.widgets.jui.CJuiSortable', array(
         <div class="block">
             <div class="navbar navbar-inner block-header">
                 <div class="muted pull-left">Sprint Task</div>
+                <div class="pull-right"><span class="badge badge-info">0</span>
+
+                </div>
             </div>
             <div class="block-content collapse in card-place card-place-task">
 
@@ -100,5 +110,5 @@ $this->widget('zii.widgets.jui.CJuiSortable', array(
         </div>
         <!-- /block -->
     </div>
-<?php $this->endWidget(); ?>
+    <?php $this->endWidget(); ?>
 </div>

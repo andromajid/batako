@@ -57,7 +57,7 @@ class sprint extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'taskSprints' => array(self::HAS_MANY, 'TaskSprint', 'sprint_sprint_id'),
+			'taskSprints' => array(self::HAS_MANY, 'task_sprint', 'sprint_sprint_id'),
 		);
 	}
 

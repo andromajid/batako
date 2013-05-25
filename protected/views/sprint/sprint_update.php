@@ -3,16 +3,7 @@ Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . '/js/tim
 Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . '/js/timepicker/timepicker.css');
 Yii::app()->getClientScript()->registerScript('timepicker', '
     jQuery(".' . CHtml::activeId($sprint, 'sprint_start_date') . ', .' . CHtml::activeId($sprint, 'sprint_end_date') . '").datetimepicker({pickTime:false,format:"yyyy-MM-dd"});
-' . "
-    var total = 0;
-    var point_arr = jQuery('.card-place-task .card-hidden-point');
-        point_arr.each(function(id) {
-            var point = parseInt(jQuery(point_arr[id]).text());
-            total += point;
-        });
-        //update ke containernya
-        jQuery('.pull-right .badge-info').html(total);
-    jQuery('.card-place').sortable({  
+' . "jQuery('.card-place').sortable({  
     connectWith: '.card-place',  
     handle: '.card-header,.muted',  
     cursor: 'move',  
@@ -114,7 +105,7 @@ $this->widget('zii.widgets.jui.CJuiSortable', array(
                 </div>
             </div>
             <div class="block-content collapse in card-place card-place-task">
-                <?php if (isset($task_sprint)) $this->renderPartial('//task/task_project', array('task_project' => $task_sprint)) ?>
+
             </div>
         </div>
         <!-- /block -->

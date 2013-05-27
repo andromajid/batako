@@ -5,7 +5,7 @@ min-width:100px;
 }
 ');
 Yii::app()->getClientScript()->registerScript('ajax-assign', '
-jQuery(".action-user button").bind("click", function() {
+jQuery(".action-user .btn-success, .action-user .btn-danger").bind("click", function() {
     var task_id_var = jQuery(this).attr("data");
     var this_btn = this;
     var this_btn_txt = jQuery(this).text();
@@ -28,16 +28,43 @@ jQuery(".action-user button").bind("click", function() {
                     jQuery(this_btn).addClass("btn "+data.btn);
                     jQuery(this_btn).html("unassign from me");
                     jQuery("#assign-"+task_id_var).html(data.username);
+                    jQuery(this_btn).next().css({display : "block"});
                 } else {
                     jQuery(this_btn).html("assign to me");
                     jQuery(this_btn).addClass("btn "+data.btn);
                     jQuery("#assign-"+task_id_var).html("");
+                    jQuery(this_btn).next().css({display : "none"});
                 }
             }
         }
     });
-});    
+});
+jQuery(".action-user .btn-primary").bind("click", function() {
+    var task_id_var = jQuery(this).attr("data");
+    var this_btn = this;
+    jQuery.ajax({
+        url : "' . $this->createUrl('/sprint/start_task') . '",
+        data : {task_id : task_id_var},
+        type : "post",
+        dataType : "json",
+        beforeSend : function() {
+            jQuery(this_btn).html("wait a second");
+        },
+        success : function(data) {
+            if(!data.error) {
+                window.location = "'.$this->createUrl('/task/view/task_id').'/"+task_id_var;
+            } else {
+                alert("Error : ada kesalahan system silahkan ulangi lagi");
+            }
+        }
+    })
+});
 ');
+$this->widget('zii.widgets.jui.CJuiSortable', array(
+    // additional javascript options for the JUI Sortable plugin
+    'options' => array(
+    ),
+));
 ?>
 <table class="table table-bordered table-striped" style="width: 35%;">
     <tr>
@@ -57,6 +84,7 @@ jQuery(".action-user button").bind("click", function() {
 <?php
 $task_project = $task_sprint;
 ?>
+<!--task list-->
 <?php if (is_array($task_project)): ?>
     <?php foreach ($task_project as $row): ?>
         <?php
@@ -104,9 +132,14 @@ $task_project = $task_sprint;
                 } else {
                     $button_arr = array('btn-success', 'assign to me');
                 }
+                $display_card = 'display:none;';
+                if (isset($row['task_assign_user_id']) && $row['task_is_end'] == '0' && $row['task_assign_user_id'] == $this->admin_auth->user_id) {
+                    $display_card = 'display:block;';
+                }
                 ?>
                 <div class="action-user">
                     <button data="<?php echo $row['task_id']; ?>" style="margin: 2px auto 0px;display:block;" class="btn <?php echo $button_arr[0] ?>"><?php echo $button_arr[1] ?></button>
+                    <button data="<?php echo $row['task_id']; ?>" style="margin:  4px auto 5px;<?php echo $display_card; ?>" class="btn btn-primary">Start This Task</button>
                 </div>
             </div>
             <div class="image-tool">

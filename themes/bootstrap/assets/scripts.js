@@ -1,4 +1,8 @@
 $(function() {
+    //overiding window alert 
+    window.alert = function(text) {
+        bootbox.alert(text);
+    }
     // Side Bar Toggle
     $('.hide-sidebar').click(function() {
 	  $('#sidebar').hide('fast', function() {

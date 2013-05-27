@@ -103,7 +103,25 @@ class SprintController extends adminController {
                 'message' => 'task not found'));
         }
     }
-
+    /**
+     * action ajax buat start data
+     */
+    public function actionStart_task() {
+        if(isset($_POST['task_id'])) {
+            $data = task::model()->getTaskById($_POST['task_id']);
+            if(count($data) > 1) {
+                if($this->admin_auth->user_id == $data['task_assign_user_id']) {
+                    Yii::app()->db->createCommand()->update('task', array('task_start_datetime' => date("Y-m-d H:i:s")), "task_id = :task_id", 
+                                                            array(':task_id' => $_POST['task_id']));
+                    echo CJavaScript::jsonEncode(array('error' => false));
+                } else 
+                   echo CJavaScript::jsonEncode(array('error' => true));
+            } else
+                 echo CJavaScript::jsonEncode(array('error' => true));
+        } else {
+                echo CJavaScript::jsonEncode(array('error' => true));
+        }
+    }
     /**
      * buat filter task dari semua task di kurangin task yang ada di sprint
      * @param Array $task_project daftar semua task

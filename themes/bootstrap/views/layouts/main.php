@@ -150,6 +150,7 @@
         </div>
         <!--/.fluid-container-->
         <script src="<?php echo $baseUrl; ?>/js/bootstrap.min.js"></script>
+        <script src="<?php echo $baseUrl; ?>/js/bootbox.js"></script>
         <script src="<?php echo $baseUrl; ?>/assets/scripts.js"></script>
     </body>
 

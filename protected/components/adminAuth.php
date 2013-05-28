@@ -47,12 +47,12 @@ class adminAuth {
      * public function check_password
      */
     public function checkPassword() {
-        if (isset($_SESSION[$this->auth_name]['admin_id'])) {
-            $data_model = Yii::app()->db->createCommand()->from('user')->where('user_id=:admin_id', array(':admin_id' => $_SESSION[$this->auth_name]['admin_id']))
+        if (isset($_SESSION[$this->auth_name]['user_id'])) {
+            $data_model = Yii::app()->db->createCommand()->from('user')->where('user_id=:admin_id', array(':admin_id' => $_SESSION[$this->auth_name]['user_id']))
                     ->queryRow();
             if (isset($data_model)) {
                 //check password
-                if ($_SESSION[$this->auth_name]['admin_password'] == $data_model['admin_password'] && $data_model['admin_is_active'] == '1') {
+                if ($_SESSION[$this->auth_name]['user_password'] == $data_model['user_password'] && $data_model['user_is_active'] == '1') {
                     return array('error' => FALSE);
                 } else {
                     //CController::redirect('/site/login');//  throw new CHttpException(500, 'Admin Tidak aktiv');
@@ -93,6 +93,7 @@ class adminAuth {
                 //update last loginnya
                $data_arr = array('user_id' => $data_model['user_id'],
                     'username' => $data_model['username'],
+                    'user_password' => $data_model['user_password'],
                     'user_is_administrator' => $data_model['user_is_administrator'],
                     'user_role' => dbHelper::getOne('user_role_name', 'user_role', 'user_role_id=\'' . $data_model['user_role_user_role_id'] . '\''));
                 $_SESSION[$this->auth_name] = $data_arr;
@@ -111,12 +112,12 @@ class adminAuth {
      */
     public function auth_action_cont(CController $action) {
         $data_return = array();
-        $action_name = $action->module->getName().'.'.$action->id.'.'.$action->action->id;
+        $action_name = $action->id.'.'.$action->action->id;
         //ambil con_action_id
-        $con_action_id = dbHelper::getOne('con_action_id', 'site_controller_action', 'con_action_data = \''.$action_name.'\'');
+        $con_action_id = dbHelper::getOne('con_action_id', 'con_action', 'con_action_data = \''.$action_name.'\'');
         if($con_action_id) {
-            $cek = dbHelper::getOne('con_action_prev_admin_group_id', 'site_con_action_prev', 
-                                    'con_action_prev_admin_group_id = '.$this->admin_group_id.' AND con_action_prev_con_action_id = '.$con_action_id);
+            $cek = dbHelper::getOne('con_action_user_role_user_role_id', 'con_action_user_role', 
+                                    'con_action_user_role_user_role_id = '.$this->user_id.' AND con_action_user_role_con_action_id = '.$con_action_id);
             if(!$cek) {
                 return array('error' => true, 'message' => $action_name.' tidak berhak akses');
             } else return array('error' => false);

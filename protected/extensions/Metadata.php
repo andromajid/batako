@@ -1,4 +1,4 @@
-<?php
+<?
 /**
 * Metadata Helps to get metadata about models,controllers and actions in application* 
 * 
@@ -14,11 +14,11 @@
 *   var_dump($user_actions);
 * 
 * @author Vitaliy Stepanenko <mail@vitaliy.in>
-* @version 0.1
+* @version 0.2
 * @license BSD   
 */
 
-class Metadata {
+class Metadata extends CApplicationComponent {
 
     /**
     * Get all information about application
@@ -29,18 +29,18 @@ class Metadata {
     {
         
         $meta=array(
-//            'models'=>$this->getModels(),
-//            'controllers'=>$this->getControllers(),
-            'modules'=> array('admin'),
+            'models'=>$this->getModels(),
+            'controllers'=>$this->getControllers(),
+            'modules'=>$this->getModules(),
         );
-//        foreach ($meta['controllers'] as &$controller)
-//        {
-//            $controller=array(
-//                'name'=>$controller,
-//                'actions'=>$this->getActions($controller)
-//            );   
-//        }
-//         
+        foreach ($meta['controllers'] as &$controller)
+        {
+            $controller=array(
+                'name'=>$controller,
+                'actions'=>$this->getActions($controller)
+            );   
+        }
+         
         foreach ($meta['modules'] as &$module)
         {
             
@@ -62,6 +62,7 @@ class Metadata {
             );
             
         }
+         
         return $meta;
 
     }
@@ -82,6 +83,7 @@ class Metadata {
             $path='protected'.DIRECTORY_SEPARATOR.'controllers';
         }        
         
+        
             include_once($path.DIRECTORY_SEPARATOR.$controller.'.php');        
             $reflection = new ReflectionClass($controller); 
             $methods = $reflection->getMethods(); 
@@ -96,7 +98,6 @@ class Metadata {
                 $actions[]=str_replace('action','',$method->name);
             }
         }
-        
         return $actions;
 
     }
@@ -130,7 +131,7 @@ class Metadata {
         {
             $controller=array(
                 'name'=>$controller,
-                'actions'=>$this->getActions($controller)
+                'actions'=>$this->getActions($controller, $module)
             );   
         }
         return $c;
@@ -156,8 +157,7 @@ class Metadata {
         {            
             $c=str_ireplace('.php','',$c);
         }       
-        return $controllers; 
-        // die(var_dump($controllers));
+        return $controllers;         
     }
 
     /**

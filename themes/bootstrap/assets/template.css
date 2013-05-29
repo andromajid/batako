@@ -316,7 +316,15 @@ table.card-table td {
     cursor: move;
 }
 .scrum_view {
-
+    
 }
-#sidebar ul li {
+.loading {
+    z-index: 999;
+    position: fixed;
+    top: 41px;
+    left: 50%;
+    display: none;
+    background-color: rgba(255,0,0, 0.6);
+    width: 77px;
+    text-align: center;
 }

@@ -1,4 +1,9 @@
 $(function() {
+    $(document).ajaxStart(function(){
+        $('.loading').show(200);
+    }).ajaxComplete(function(){
+        $('.loading').hide(200);
+    });
     //overiding window alert 
     window.alert = function(text) {
         bootbox.alert(text);

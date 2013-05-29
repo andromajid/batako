@@ -130,11 +130,13 @@ class User_roleController extends adminController {
         $data_tree = array();
         if (isset($model)) {
             foreach ($model as $row_model) {
-                $data_tree[] = array('title' => $row_model['con_action_data'],
+                $data_tree[] = array('title' => '/'.str_replace('.', '/', $row_model['con_action_data']),
                     'id' => $row_model['con_action_id'],
                     'select' => @in_array($row_model['con_action_id'], $data_right) ? TRUE : FALSE,);
             }
         }
+        $role = dbHelper::getOne('user_role_name', 'user_role', 'user_role_id = '.$id);
+        $this->title = "Update User Role ".$role;
         $this->render('right', array('model' => $data_tree));
     }
 

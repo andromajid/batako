@@ -309,10 +309,7 @@ table.card-table td {
 .card-place {
     min-height: 150px;
 }
-.card-header {
-    cursor: move;
-}
-.card-block .muted {
+.is_draggable {
     cursor: move;
 }
 .scrum_view {

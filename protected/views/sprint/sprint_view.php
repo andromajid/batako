@@ -65,6 +65,10 @@ $this->widget('zii.widgets.jui.CJuiSortable', array(
     'options' => array(
     ),
 ));
+$total_point = 0;
+foreach($task_sprint as $row) {
+    $total_point += $row['task_point'];
+} 
 ?>
 <table class="table table-bordered table-striped" style="width: 35%;">
     <tr>
@@ -78,6 +82,10 @@ $this->widget('zii.widgets.jui.CJuiSortable', array(
     <tr>
         <td>tanggal Berakhir</td>
         <td><?php echo empty($sprint['sprint_end_date']) || $sprint['sprint_end_date'] == '0000-00-00' ? 'Belum di definisikan' : function_lib::convert_date($sprint['sprint_end_date'], 'char'); ?></td>
+    </tr>
+    <tr>
+        <td>total Point Sprint</td>
+        <td><?php echo $total_point; ?></td>
     </tr>
 </table>
 <h3>task dalam Sprint : </h3>
@@ -136,10 +144,14 @@ $task_project = $task_sprint;
                 if (isset($row['task_assign_user_id']) && $row['task_is_end'] == '0' && $row['task_assign_user_id'] == $this->admin_auth->user_id) {
                     $display_card = 'display:block;';
                 }
+                $disabled = "";
+                if($row['task_is_start'] == '1') {
+                    $disabled = "disabled";
+                }
                 ?>
                 <div class="action-user">
                     <button data="<?php echo $row['task_id']; ?>" style="margin: 2px auto 0px;display:block;" class="btn <?php echo $button_arr[0] ?>"><?php echo $button_arr[1] ?></button>
-                    <button data="<?php echo $row['task_id']; ?>" style="margin:  4px auto 5px;<?php echo $display_card; ?>" class="btn btn-primary">Start This Task</button>
+                    <button data="<?php echo $row['task_id']; ?>" <?php echo $disabled.' ';?>style="margin:  4px auto 5px;<?php echo $display_card; ?>" class="<?php echo $disabled.' ';?>btn btn-primary">Start This Task</button>
                 </div>
             </div>
             <div class="image-tool">

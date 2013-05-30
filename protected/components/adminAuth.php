@@ -17,7 +17,7 @@ class adminAuth {
      * setter buatmagic function dari php __set
      */
     public function __set($name, $value) {
-        $_SESSION[$this->auth_name][$name] = value;
+        $_SESSION[$this->auth_name][$name] = $value;
     }
 
     /**
@@ -94,6 +94,7 @@ class adminAuth {
                $data_arr = array('user_id' => $data_model['user_id'],
                     'username' => $data_model['username'],
                     'user_password' => $data_model['user_password'],
+                    'user_role_id' => $data_model['user_role_user_role_id'],
                     'user_is_administrator' => $data_model['user_is_administrator'],
                     'user_role' => dbHelper::getOne('user_role_name', 'user_role', 'user_role_id=\'' . $data_model['user_role_user_role_id'] . '\''));
                 $_SESSION[$this->auth_name] = $data_arr;
@@ -124,6 +125,22 @@ class adminAuth {
         } else {
             return array('error' => true, 'message' => $action_name.' tidak terdapat di database');
         }
+    }
+    /**
+     * fungsi buat cek akses berdasar url-nya
+     * @param String $cont_action controller/action
+     * @return Boolean 
+     */
+    public function checkAccess($cont_action) {
+        if($this->user_is_administrator == '1')
+            return TRUE;
+        $cont_action = trim(str_replace('/', '.', $cont_action), '.');
+        $check = dbHelper::getOne('con_action_id', 'con_action LEFT JOIN con_action_user_role ON con_action_user_role_con_action_id = con_action_id',
+                                  "con_action_data = '".$cont_action."' AND con_action_user_role_user_role_id = ".$this->user_role_id);
+        if($check) 
+            return TRUE;
+        else
+            return FALSE;
     }
 }
 

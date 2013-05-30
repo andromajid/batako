@@ -52,7 +52,7 @@ class UserController extends adminController {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-
+        $change_password = false;
         $this->title = 'Update Data ' . $model->username;
 
         // Uncomment the following line if AJAX validation is needed
@@ -61,7 +61,14 @@ class UserController extends adminController {
         if (isset($_POST['user'])) {
             $username = $model->username;
             $model->attributes = $_POST['user'];
-            $validate = array('user_role_user_role_id','user_email','user_realname','user_avatar', 'user_is_active', 'user_is_administrator');
+            //model_password
+            if ($model->user_password == '')
+                $model->user_password = $_POST['old_password'];
+            else {
+                $model->user_password = md5($model->user_password);
+                $change_password = true;
+            }
+            $validate = array('user_role_user_role_id', 'user_email', 'user_realname', 'user_avatar', 'user_is_active', 'user_is_administrator');
             if ($username !== $model->username) {
                 array_push($validate, 'username');
             }
@@ -69,6 +76,9 @@ class UserController extends adminController {
                 Yii::import('application.helper.FileHelper');
                 $image_name = FileHelper::avatar_upload($model, 'user_avatar');
                 $model->save(false);
+                //change password to variable admin_auth
+                if ($change_password)
+                    $this->admin_auth->user_password = $model->user_password;
                 $this->redirect(array('view', 'id' => $model->user_id));
             }
         }

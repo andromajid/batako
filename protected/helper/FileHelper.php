@@ -68,7 +68,7 @@ class FileHelper {
             $image_location = Yii::getPathOfAlias('webroot') . '/files/images/' . $folder_name . '/' . $upload_file->name;
             $upload_file->saveAs($image_location);
             self::resize_image($size['width'], $size['height'], $image_location);
-            return $uploadedFile->name;
+            return $upload_file->name;
         } else {
             return '';
         }

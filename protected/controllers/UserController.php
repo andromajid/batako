@@ -76,6 +76,8 @@ class UserController extends adminController {
                 Yii::import('application.helper.FileHelper');
                 $image_name = FileHelper::avatar_upload($model, 'user_avatar');
                 $model->save(false);
+                //avatar too
+                $this->admin_auth->user_avatar = $model->user_avatar;
                 //change password to variable admin_auth
                 if ($change_password)
                     $this->admin_auth->user_password = $model->user_password;
@@ -132,6 +134,10 @@ class UserController extends adminController {
      * @param integer the ID of the model to be loaded
      */
     public function loadModel($id) {
+        if($id !== $this->admin_auth->user_id) {
+            if($this->admin_auth->user_is_administrator == '0') 
+                throw new CHttpException(404, 'The requested page does not exist.');
+        }
         $model = user::model()->find('user_id=:id OR username=:id', array(':id' => $id));
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');

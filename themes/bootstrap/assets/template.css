@@ -325,3 +325,7 @@ table.card-table td {
     width: 77px;
     text-align: center;
 }
+.user-image img {
+    width : 18px;
+    margin-right: 5px;
+}

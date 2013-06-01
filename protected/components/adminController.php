@@ -38,7 +38,7 @@ class adminController extends CController {
         $data_auth = $this->admin_auth->auth_action_cont($this);
 //        var_dump($data_auth);
 //        die();
-        if ($data_auth['error']) {
+        if ($data_auth['error'] && $this->admin_auth->user_is_administrator == '0') {
             Yii::app()->user->setFlash('error', $data_auth['message']);
             $this->redirect(array('/admin/login'));
         }

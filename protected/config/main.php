@@ -47,6 +47,7 @@ return array(
             'urlFormat' => 'path',
             'showScriptName' => false,
             'rules' => array(
+                '' => 'site/login',
                 'login' => 'admin/default/login',
                 'logout' => 'admin/default/logout',
                 '<controller:\w+>/<action:\w+>/*' => '<controller>/<action>',
@@ -93,9 +94,6 @@ return array(
     // using Yii::app()->params['paramName']
     'params' => array(
         'config' => array(
-            'dir' => array(
-                'news' => $_CONFIG['app']['base_url'] . '/files/images/',
-            ),
         ),
     ),
     'theme' => 'bootstrap',

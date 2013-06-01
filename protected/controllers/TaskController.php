@@ -197,7 +197,18 @@ class TaskController extends adminController {
         else
             throw new CHttpException('page not founf', 404);
     }
-
+    /**
+     * buat list task
+     */
+    public function actionList() {
+        $this->title = 'Daftar Task';
+        $task = new task('search');
+        $task->unsetAttributes();
+        if(isset($_GET['task'])) {
+            $task->attributes = $_GET['task'];
+        }
+        $this->render('list', array('task' => $task));
+    }
 }
 
 

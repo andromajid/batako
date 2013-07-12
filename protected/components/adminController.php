@@ -40,7 +40,8 @@ class adminController extends CController {
 //        die();
         if ($data_auth['error'] && $this->admin_auth->user_is_administrator == '0') {
             Yii::app()->user->setFlash('error', $data_auth['message']);
-            $this->redirect(array('/admin/login'));
+            //$this->redirect(array('/admin/login'));
+            throw new CHttpException('denied', 500);
         }
 
 

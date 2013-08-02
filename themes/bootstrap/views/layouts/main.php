@@ -31,7 +31,10 @@
                     </a>
                     <a class="brand" href="#">Admin Panel</a>
                     <div class="nav-collapse collapse">
-                        <?php $this->renderPartial('//layouts/__dropdown_user');?>
+                        <?php
+                        if (isset($this->admin_auth))
+                            $this->renderPartial('//layouts/__dropdown_user');
+                        ?>
                         <ul class="nav">
                             <li class="active">
                                 <a href="#">Dashboard</a>
@@ -127,11 +130,11 @@
             }
             ?>
             <div class="row-fluid">
-                <?php echo $content; ?>
+<?php echo $content; ?>
             </div>
             <hr>
             <footer>
-                <p>&copy; Vincent Gabriel 2013</p>
+                <p>&copy; Andro Majid 2013</p>
             </footer>
         </div>
         <!--/.fluid-container-->

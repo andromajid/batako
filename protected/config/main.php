@@ -50,8 +50,8 @@ return array(
                 '' => 'site/login',
                 'login' => 'admin/default/login',
                 'logout' => 'admin/default/logout',
-                '<controller:\w+>/<action:\w+>/*' => '<controller>/<action>',
-                '<module:\w+>/<controller:\w+>/<action:\w+>/*' => '<module>/<controller>/<action>',
+                //'<controller:\w+>/<action:\w+>/*' => '<controller>/<action>',
+                //'<module:\w+>/<controller:\w+>/<action:\w+>/*' => '<module>/<controller>/<action>',
                 '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
                 //'<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>/*' => '<controller>/<action>',
@@ -60,7 +60,7 @@ return array(
         ),
         // uncomment the following to use a MySQL database
         'db' => array(
-            'connectionString' => 'mysql:host=localhost;dbname=skripsi',
+            'connectionString' => 'mysql:host=localhost;dbname=batako',
             'emulatePrepare' => true,
             'enableProfiling' => true,
             'enableParamLogging' => true,

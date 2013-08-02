@@ -1,23 +1,17 @@
 -- phpMyAdmin SQL Dump
--- version 3.4.10.1deb1
+-- version 3.5.8.1deb1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 13, 2013 at 01:54 AM
--- Server version: 5.5.29
--- PHP Version: 5.3.10-1ubuntu3.6
+-- Generation Time: Aug 02, 2013 at 08:42 PM
+-- Server version: 5.5.32-0ubuntu0.13.04.1
+-- PHP Version: 5.4.9-4ubuntu2.2
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
 --
--- Database: `skripsi`
+-- Database: `batako`
 --
 
 -- --------------------------------------------------------
@@ -432,6 +426,23 @@ INSERT INTO `user` (`user_id`, `username`, `user_realname`, `user_email`, `user_
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `user_notification`
+--
+
+CREATE TABLE IF NOT EXISTS `user_notification` (
+  `user_notification_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_notification_user_id` int(11) NOT NULL,
+  `user_notification_description` varchar(255) DEFAULT NULL,
+  `user_notification_project_id` int(11) NOT NULL,
+  `user_notification_datetitme` datetime DEFAULT NULL,
+  PRIMARY KEY (`user_notification_id`),
+  KEY `user_notification_user_id` (`user_notification_user_id`),
+  KEY `user_notification_project_id` (`user_notification_project_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user_role`
 --
 
@@ -503,6 +514,9 @@ ALTER TABLE `task_sprint`
 ALTER TABLE `user`
   ADD CONSTRAINT `fk_user_user_role` FOREIGN KEY (`user_role_user_role_id`) REFERENCES `user_role` (`user_role_id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+--
+-- Constraints for table `user_notification`
+--
+ALTER TABLE `user_notification`
+  ADD CONSTRAINT `user_notification_ibfk_2` FOREIGN KEY (`user_notification_project_id`) REFERENCES `project` (`project_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_notification_ibfk_1` FOREIGN KEY (`user_notification_user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;

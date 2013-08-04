@@ -10,7 +10,8 @@ $this->breadcrumbs=array(
 $this->menu=array(
 	array('label'=>'List project', 'url'=>array('index')),
 	array('label'=>'Create project', 'url'=>array('create')),
-	array('label'=>'Update project', 'url'=>array('update', 'id'=>$model->project_id)),
+        array('label' => 'Create Task', 'url' => array('/task/create', array('project_id' => $model->project_id))),
+	array('label'=>'Update project', 'url'=>array('update', array('id'=>$model->project_id))),
 	array('label'=>'Delete project', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->project_id),'confirm'=>'Are you sure you want to delete this item?')),
 	array('label'=>'Manage project', 'url'=>array('admin')),
 );

@@ -7,4 +7,8 @@ class DashboardController extends adminController
     public function actionIndex() {
         $this->render('index');
     }
+    public function actionCalendar() {
+        $start_date =  date('Y-m-d', $_GET['start']);
+        $end_date = date('Y-m-d', $_GET['end']);
+    }
 }

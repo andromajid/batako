@@ -64,7 +64,7 @@ jQuery(".action-user button").bind("click", function() {
 })  
 .disableSelection();  
 ");
-$link = CHtml::link('Update Sprint : ' . $sprint['sprint_name'], $this->createUrl('update', array('sprint_id' => $sprint['sprint_id'])), 
+$link = CHtml::link('Update Sprint : ' . $sprint['sprint_name'], $this->createUrl('update', array('id' => $sprint['sprint_id'])), 
                     array('class' => 'btn btn-primary span3 submit-sprint'));
 
 $this->widget('zii.widgets.jui.CJuiSortable', array(

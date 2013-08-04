@@ -110,4 +110,13 @@ class project extends CActiveRecord {
         $data = Yii::app()->db->createCommand()->from('project')->where('project_id=:project_id', array(':project_id' => $project_id))->queryRow();
         return $data;
     }
+    /**
+     * function to get all project from userid
+     * @param Int $user_id
+     */
+    public function getProjectByUserId($user_id) {
+        $data = Yii::app()->db->createCommand()->from('project')->where('project_user_id=:user_id', array(':user_id' => $user_id))
+                ->order('project_id ASC')->queryAll();
+        return $data;
+    }
 }

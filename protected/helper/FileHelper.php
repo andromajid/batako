@@ -65,7 +65,11 @@ class FileHelper {
         $upload_file = self::upload_with_model($model, $name);
         if (!empty($upload_file)) {
             $model->$name = $upload_file->name;
-            $image_location = Yii::getPathOfAlias('webroot') . '/files/images/' . $folder_name . '/' . $upload_file->name;
+            $dir = Yii::getPathOfAlias('webroot') . '/files/images/' . $folder_name;
+            $image_location =  $dir. '/' . $upload_file->name;
+            if(!is_dir($dir)) {
+                mkdir($dir, 0777, TRUE);
+            }
             $upload_file->saveAs($image_location);
             self::resize_image($size['width'], $size['height'], $image_location);
             return $upload_file->name;

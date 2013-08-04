@@ -15,3 +15,7 @@ $this->menu=array(
 	array('label'=>'Manage project', 'url'=>array('admin')),
 );
 $this->widget('application.widget.widget_project_profile',array('project_id' => $_GET['id']));
+?>
+<span class="clearfix"></span>
+<h3>Task Dalam Project <?php echo $model->project_name?> : </h3>
+<?php $this->widget('application.widget.widget_task_list', array('task_list' => $task_list));

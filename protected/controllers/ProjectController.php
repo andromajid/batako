@@ -13,8 +13,12 @@ class ProjectController extends adminController {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
+        $model = $this->loadModel($id);
+        $this->title = $model->project_name;
+        $task_list = task::model()->getAllTaskByProjectId($id);
         $this->render('view', array(
-            'model' => $this->loadModel($id),
+            'model' => $model,
+            'task_list' => $task_list
         ));
     }
 

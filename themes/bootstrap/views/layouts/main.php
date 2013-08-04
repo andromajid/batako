@@ -114,6 +114,10 @@
                                     </li>
                                 </ul>
                             </li>
+                            <?php
+                            if (isset($this->admin_auth))
+                                $this->widget('application.widget.widget_user_menu', array('admin_auth' => $this->admin_auth));
+                            ?>
                         </ul>
                     </div>
                     <!--/.nav-collapse -->

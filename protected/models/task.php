@@ -156,7 +156,14 @@ class task extends CActiveRecord {
         $feedback = Yii::app()->db->createCommand()->from('task')->leftJoin('task_sprint', 'task_task_id = task_id')->where('sprint_sprint_id=:sprint_id', array(':sprint_id' => $sprint_id))->queryAll();
         return $feedback;
     }
-
+    /**
+     * function to get all task by project
+     * @param Int $project_id 
+     */
+    public function getAllTaskByProjectId($project_id) {
+        $feedback = Yii::app()->db->createCommand()->from('task')->where('task_project_id = :project_id', array(':project_id' => $project_id))->queryAll();
+        return $feedback;
+    }
     /**
      * method buat nyari semua task yang tidak terdapat di sprint itu
      * @param Int $sprint_id 

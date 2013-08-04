@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 02, 2013 at 08:42 PM
+-- Generation Time: Aug 04, 2013 at 12:56 PM
 -- Server version: 5.5.32-0ubuntu0.13.04.1
 -- PHP Version: 5.4.9-4ubuntu2.2
 
@@ -204,7 +204,7 @@ CREATE TABLE IF NOT EXISTS `project` (
 --
 
 INSERT INTO `project` (`project_id`, `project_name`, `project_url`, `project_description`, `project_budget`, `project_icon`, `project_is_active`, `project_user_id`) VALUES
-(1, 'Arkasoft', 'http://arkasoft.com', 'dsadadadad', 1000000, '20120205_112047.jpg', '1', 1);
+(1, 'Arkasoft', 'http://arkasoft.com', 'dsadadadad', 1000000, 'arka.jpeg', '1', 1);
 
 -- --------------------------------------------------------
 
@@ -419,7 +419,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`user_id`, `username`, `user_realname`, `user_email`, `user_password`, `user_is_active`, `user_is_administrator`, `user_avatar`, `user_role_user_role_id`) VALUES
-(1, 'arkananta', 'arkananta majid', 'andromajid@gmail.com', '82d21e53f74b7a30c620f25404837be9', '1', '1', 'wallpaper-135147.jpg', 1),
+(1, 'arkananta', 'arkananta majid', 'andromajid@gmail.com', '82d21e53f74b7a30c620f25404837be9', '1', '1', 'arka.jpeg', 1),
 (2, 'appleseed', 'andro majid', 'andromajid@gmail.com', '82d21e53f74b7a30c620f25404837be9', '1', '0', 'wallpaper-165515.jpg', 2),
 (3, 'dr-arka', 'arkananta santyani jaballah majid', 'arka@andromajid.com', '82d21e53f74b7a30c620f25404837be9', '1', '0', 'DSC_1497_4R.jpg', 2);
 
@@ -434,7 +434,7 @@ CREATE TABLE IF NOT EXISTS `user_notification` (
   `user_notification_user_id` int(11) NOT NULL,
   `user_notification_description` varchar(255) DEFAULT NULL,
   `user_notification_project_id` int(11) NOT NULL,
-  `user_notification_datetitme` datetime DEFAULT NULL,
+  `user_notification_datetime` datetime DEFAULT NULL,
   PRIMARY KEY (`user_notification_id`),
   KEY `user_notification_user_id` (`user_notification_user_id`),
   KEY `user_notification_project_id` (`user_notification_project_id`)
@@ -518,5 +518,5 @@ ALTER TABLE `user`
 -- Constraints for table `user_notification`
 --
 ALTER TABLE `user_notification`
-  ADD CONSTRAINT `user_notification_ibfk_2` FOREIGN KEY (`user_notification_project_id`) REFERENCES `project` (`project_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `user_notification_ibfk_1` FOREIGN KEY (`user_notification_user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `user_notification_ibfk_1` FOREIGN KEY (`user_notification_user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_notification_ibfk_2` FOREIGN KEY (`user_notification_project_id`) REFERENCES `project` (`project_id`) ON DELETE CASCADE ON UPDATE CASCADE;

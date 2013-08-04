@@ -12,7 +12,7 @@
  */
 class SprintController extends adminController {
 
-    public $layout = '//layouts/column1';
+    public $layout = '//layouts/column2';
 
     //put your code here
     public function actionCreate() {

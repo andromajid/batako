@@ -87,7 +87,7 @@ $this->widget('zii.widgets.jui.CJuiSortable', array(
         </div>
     </div>
     <div>
-        <?php echo CHtml::submitButton('Create Sprint', array('class' => 'btn btn-primary span3 submit-sprint', 'style' => 'margin:14px auto;display:block;padding:9px')) ?>
+        <?php echo CHtml::submitButton($sprint->isNewRecord ? 'Create Sprint' : 'Update Sprint', array('class' => 'btn btn-primary span3 submit-sprint', 'style' => 'margin:14px auto;display:block;padding:9px')) ?>
     </div>
     <h3>Sprint Task : </h3>
     <div class="span5">

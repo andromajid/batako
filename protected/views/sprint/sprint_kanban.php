@@ -64,6 +64,9 @@ jQuery(".action-user button").bind("click", function() {
 })  
 .disableSelection();  
 ");
+$link = CHtml::link('Update Sprint : ' . $sprint['sprint_name'], $this->createUrl('update', array('sprint_id' => $sprint['sprint_id'])), 
+                    array('class' => 'btn btn-primary span3 submit-sprint'));
+
 $this->widget('zii.widgets.jui.CJuiSortable', array(
     // additional javascript options for the JUI Sortable plugin
     'options' => array(
@@ -82,6 +85,7 @@ foreach ($task_sprint as $row) {
 
             </div>
             <div class="block-content collapse in">
+                <?php  echo($link);?><span class="clearfix"></span><br />
                 <table class="table table-bordered table-striped" style="width: 35%;">
                     <tr>
                         <td>Nama Sprint</td>

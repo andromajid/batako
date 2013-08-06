@@ -37,7 +37,7 @@ class sprint extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('sprint_name', 'required'),
+            array('sprint_name,sprint_start_date,sprint_end_date', 'required'),
             array('sprint_name', 'length', 'max' => 127),
             array('sprint_start_date, sprint_end_date', 'safe'),
             // The following rule is used by search().

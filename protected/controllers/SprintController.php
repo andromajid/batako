@@ -21,13 +21,18 @@ class SprintController extends adminController {
             $sprint->attributes = $_POST['sprint'];
             if ($sprint->validate()) {
                 $sprint->save(false);
-                if (is_array($_POST['task_sprint']) && count($_POST['task_sprint']) > 0) {
-                    foreach ($_POST['task_sprint'] as $row_sprint) {
-                        //save ke task_sprint
-                        Yii::app()->db->createCommand()->insert('task_sprint', array('task_task_id' => $row_sprint,
-                            'sprint_sprint_id' => $sprint->sprint_id));
+                if (isset($_POST['task_sprint'])) {
+                    if (is_array($_POST['task_sprint']) && count($_POST['task_sprint']) > 0) {
+                        foreach ($_POST['task_sprint'] as $row_sprint) {
+                            //save ke task_sprint
+                            Yii::app()->db->createCommand()->insert('task_sprint', array('task_task_id' => $row_sprint,
+                                'sprint_sprint_id' => $sprint->sprint_id));
+                        }
                     }
                 }
+                //berhasil nambah data sprint
+                Yii::app()->user->setFlash('success', 'Sprint Berhasil ditambah');
+                $this->redirect(array('/sprint/view','id' => $sprint->sprint_id));
             }
         }
         $task_project = task::model()->getAllTask();

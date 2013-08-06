@@ -172,4 +172,37 @@ class task extends CActiveRecord {
         $feedback = Yii::app()->db->createCommand()->from('task')->leftJoin('task_sprint', 'task_task_id = task_id')->where('sprint_sprint_id!=:sprint_id', array(':sprint_id' => $sprint_id))->queryAll();
         return $feedback;
     }
+    /**
+     * fungsi buat ngambil data buat calanedar dashboar
+     * @param Array $arr_date array('start_date' => date('Y-m', $_GET['start']),
+                          'end_date' => ate('Y-m', $_GET['end']));
+     */
+    public function getTaskCalendarDate($arr_date) {
+        $sql_select = $sql_between = $sql_or = '';
+        $x = 1;
+        foreach($arr_date as $string_val => $date) {
+            if(isset($date)) {
+                $or = $x == 1?'':'OR';
+                $sql_select .= ",DATE_FORMAT(STR_TO_DATE('".$date."', '%Y-%m'), '%Y-%m') AS tanggal_".$string_val;
+                //$sql_between .= $or.' tanggal_'.$string_val.' BETWEEN DATE_FORMAT(task_start_datetime, \'%Y-%m\') AND DATE_FORMAT(task_end_datetime, \'%Y-%m\') ';
+                $sql_or .= $or.' (DATE_FORMAT(task_'.$string_val.'time, \'%Y-%m\') >= tanggal_start_date'.
+                           ' AND DATE_FORMAT(task_'.$string_val.'time, \'%Y-%m\') <= tanggal_end_date)';
+                $x++;
+            }
+        }
+        
+        $sql = "SELECT *".$sql_select." FROM task";
+        $sql .= " HAVING ".$sql_between.$sql_or;
+        $data = Yii::app()->db->createCommand($sql)->queryAll();
+        $data_json = array();
+        if($data) {
+            foreach($data as $row) {
+                $project_name = dbHelper::getOne('project_name', 'project', 'project_id = '.$row['task_project_id']);
+                $data_json[] = array('title' => 'Task : '.$row['task_title'].' (Project : '.$project_name.')',
+                                    'start' => $row['task_start_datetime'],
+                                    'end' => $row['task_end_datetime']);
+            } 
+        }
+        return $data_json;
+    }
 }

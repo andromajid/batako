@@ -125,6 +125,7 @@ class sprint extends CActiveRecord {
                 $data_json[] = array('title' => 'Sprint : ' . $row['sprint_name'],
                     'start' => $row['sprint_start_date'],
                     'end' => $row['sprint_end_date'],
+                    'url' => Yii::app()->getController()->createUrl('/sprint/kanban/', array('id' => $row['sprint_id'])),
                     'color' => 'green');
             }
         }

@@ -10,7 +10,10 @@ class DashboardController extends adminController
     public function actionCalendar() {
         $arr_date = array('start_date' => date('Y-m', $_GET['start']),
                           'end_date' => date('Y-m', $_GET['end']));
-        echo CJSON::encode(task::model()->getTaskCalendarDate($arr_date));
+        $data_task = task::model()->getTaskCalendarDate($arr_date);
+        $data_sprint = sprint::model()->getSprintCalendarDate($arr_date);
+        $data_merge = array_merge($data_task, $data_sprint);
+        echo CJSON::encode($data_merge);
         Yii::app()->end();
         
     }

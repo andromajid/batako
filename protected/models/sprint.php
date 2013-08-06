@@ -88,7 +88,8 @@ class sprint extends CActiveRecord {
             'criteria' => $criteria,
         ));
     }
-     /**
+
+    /**
      * method buat nyari data sprint berdasar sprint_id
      * @param Int $sprint_id
      */
@@ -96,4 +97,38 @@ class sprint extends CActiveRecord {
         $data = Yii::app()->db->createCommand()->from('sprint')->where('sprint_id = :sprint_id', array(':sprint_id' => $sprint_id))->queryRow();
         return $data;
     }
+
+    /**
+     * function buat mendapatkan data calendar 
+     * @param Array $arr_date array('start_date' => date('Y-m', $_GET['start']),
+      'end_date' => ate('Y-m', $_GET['end']));
+     */
+    public function getSprintCalendarDate($arr_date) {
+        $sql_select = $sql_between = $sql_or = '';
+        $x = 1;
+        foreach ($arr_date as $string_val => $date) {
+            if (isset($date)) {
+                $or = $x == 1 ? '' : 'OR';
+                $sql_select .= ",DATE_FORMAT(STR_TO_DATE('" . $date . "', '%Y-%m'), '%Y-%m') AS tanggal_" . $string_val;
+                //$sql_between .= $or.' tanggal_'.$string_val.' BETWEEN DATE_FORMAT(task_start_datetime, \'%Y-%m\') AND DATE_FORMAT(task_end_datetime, \'%Y-%m\') ';
+                $sql_or .= $or . ' (DATE_FORMAT(sprint_' . $string_val . ', \'%Y-%m\') >= tanggal_start_date' .
+                        ' AND DATE_FORMAT(sprint_' . $string_val . ', \'%Y-%m\') <= tanggal_end_date)';
+                $x++;
+            }
+        }
+        $sql = "SELECT *" . $sql_select . " FROM sprint";
+        $sql .= " HAVING " . $sql_between . $sql_or;
+        $data = Yii::app()->db->createCommand($sql)->queryAll();
+        $data_json = array();
+        if ($data) {
+            foreach ($data as $row) {
+                $data_json[] = array('title' => 'Sprint : ' . $row['sprint_name'],
+                    'start' => $row['sprint_start_date'],
+                    'end' => $row['sprint_end_date'],
+                    'color' => 'green');
+            }
+        }
+        return $data_json;
+    }
+
 }

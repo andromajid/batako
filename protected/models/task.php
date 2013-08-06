@@ -200,7 +200,8 @@ class task extends CActiveRecord {
                 $project_name = dbHelper::getOne('project_name', 'project', 'project_id = '.$row['task_project_id']);
                 $data_json[] = array('title' => 'Task : '.$row['task_title'].' (Project : '.$project_name.')',
                                     'start' => $row['task_start_datetime'],
-                                    'end' => $row['task_end_datetime']);
+                                    'end' => $row['task_end_datetime'],
+                                    'color' => 'blue');
             } 
         }
         return $data_json;

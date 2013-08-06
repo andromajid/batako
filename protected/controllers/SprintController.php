@@ -32,7 +32,7 @@ class SprintController extends adminController {
                 }
                 //berhasil nambah data sprint
                 Yii::app()->user->setFlash('success', 'Sprint Berhasil ditambah');
-                $this->redirect(array('/sprint/view','id' => $sprint->sprint_id));
+                $this->redirect(array('/sprint/view', 'id' => $sprint->sprint_id));
             }
         }
         $task_project = task::model()->getAllTask();
@@ -162,6 +162,7 @@ class SprintController extends adminController {
         }
         return $new_project;
     }
+
 
 }
 

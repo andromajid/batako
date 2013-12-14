@@ -1,4 +1,5 @@
 <?php
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -197,6 +198,7 @@ class TaskController extends adminController {
         else
             throw new CHttpException('page not founf', 404);
     }
+
     /**
      * buat list task
      */
@@ -204,13 +206,24 @@ class TaskController extends adminController {
         $this->title = 'Daftar Task';
         $task = new task('search');
         $task->unsetAttributes();
-        if(isset($_GET['task'])) {
+        if (isset($_GET['task'])) {
             $task->attributes = $_GET['task'];
         }
         $this->render('list', array('task' => $task));
     }
+
+    /**
+     * buat list task per ID
+     */
+    public function actionUser($id) {
+        if (isset($id)) {
+            $this->title = 'daftar task';
+            $this->render('user_list', array('id' => $id));
+        }
+        else
+            throw new Exception('User ID is empty', 401);
+    }
+
 }
-
-
 
 ?>

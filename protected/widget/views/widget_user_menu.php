@@ -32,3 +32,6 @@ if (isset($data['sprint'])):
         </ul>
     </li>
 <?php endif; ?>
+<li>
+    <a href="<?php echo Yii::app()->getController()->createUrl('/task/user', array('id' => $this->admin_auth->user_id)); ?>">Task List</a>
+</li>

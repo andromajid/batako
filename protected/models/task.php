@@ -99,16 +99,16 @@ class task extends CActiveRecord {
         );
     }
 
-    public function search() {
+    public function search($id = null) {
 
         $criteria = new CDbCriteria;
-
+        $user_id = $id !== null ? $id : $this->task_assign_user_id;
         $criteria->compare('task_id', $this->task_id);
         $criteria->compare('task_title', $this->task_title, true);
         $criteria->compare('task_description', $this->task_description, true);
         $criteria->compare('task_point', $this->task_point);
         $criteria->compare('task_creator_user_id', $this->task_creator_user_id);
-        $criteria->compare('task_assign_user_id', $this->task_assign_user_id);
+        $criteria->compare('task_assign_user_id', $user_id);
         $criteria->compare('task_create_datetime', $this->task_create_datetime, true);
         $criteria->compare('task_start_datetime', $this->task_start_datetime, true);
         $criteria->compare('task_end_datetime', $this->task_end_datetime, true);

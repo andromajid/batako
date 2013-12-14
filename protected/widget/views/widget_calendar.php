@@ -8,7 +8,7 @@ $this->widget('ext.efullcalendar.EFullCalendar', array(
             'center' => 'title',
             'right' => 'today'
         ),
-        'events' => $this->createUrl('/dashboard/calendar')
+        'events' => Yii::app()->getController()->createUrl('/dashboard/calendar')
     ),
     'htmlOptions' => array('style' => 'width:60%'),
 ));

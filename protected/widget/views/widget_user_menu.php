@@ -22,13 +22,21 @@ if (isset($data['sprint'])):
 
         </a>
         <ul class="dropdown-menu">
-            <?php foreach ($data['sprint'] as $row_project): ?>
-                <li>
-                    <a tabindex="-1" href="<?php echo Yii::app()->getController()->createUrl('/sprint/kanban', array('id' => $row_project['sprint_id'])); ?>">
-                        <?php echo $row_project['sprint_name']; ?>
-                    </a>
-                </li>
-            <?php endforeach; ?>
+            <li>
+                <a tabindex="-1" href="<?php echo Yii::app()->createUrl('/sprint/create'); ?>">create sprint</a>
+            </li>
+            <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">Daftar sprint</a>
+                <ul class="dropdown-menu">
+                    <?php foreach ($data['sprint'] as $row_project): ?>
+                        <li>
+                            <a tabindex="-1" href="<?php echo Yii::app()->getController()->createUrl('/sprint/kanban', array('id' => $row_project['sprint_id'])); ?>">
+                                <?php echo $row_project['sprint_name']; ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </li>
         </ul>
     </li>
 <?php endif; ?>

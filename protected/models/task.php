@@ -103,6 +103,7 @@ class task extends CActiveRecord {
 
         $criteria = new CDbCriteria;
         $user_id = $id !== null ? $id : $this->task_assign_user_id;
+        $criteria->order = 'task_is_end DESC, task_create_datetime ASC';
         $criteria->compare('task_id', $this->task_id);
         $criteria->compare('task_title', $this->task_title, true);
         $criteria->compare('task_description', $this->task_description, true);

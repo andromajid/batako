@@ -40,6 +40,7 @@ class sprint extends CActiveRecord {
             array('sprint_name,sprint_start_date,sprint_end_date', 'required'),
             array('sprint_name', 'length', 'max' => 127),
             array('sprint_start_date, sprint_end_date', 'safe'),
+            array('sprint_start_date', 'checkSprintDate'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
             array('sprint_id, sprint_name, sprint_start_date, sprint_end_date', 'safe', 'on' => 'search'),
@@ -130,6 +131,68 @@ class sprint extends CActiveRecord {
             }
         }
         return $data_json;
+    }
+
+    /**
+     * validate sprint date
+     */
+    public function checkSprintDate($attribute, $params) {
+        $found = false;
+        //check date per date
+        if (isset($this->sprint_id)) {
+            $data_task = Yii::app()->db->createCommand()->from('sprint')->where('sprint_id = :sprint_id', array(':sprint_id' => $this->sprint_id))->queryRow();
+            if (isset($data_task)) {
+                if ($data_task['sprint_start_date'] == $this->sprint_start_date && $data_task['sprint_end_date'] == $this->sprint_end_date) {
+                    $found = true;
+                }
+            }
+        }
+        $start_date = DateTime::createFromFormat('Y-m-d', $this->sprint_start_date);
+        $end_date = DateTime::createFromFormat('Y-m-d', $this->sprint_end_date);
+        while ($start_date <= $end_date && $found == false) {
+            $plus_one_day = new DateInterval('P1D');
+            $date_check = $start_date->format('Y-m-d');
+            $sql = "SELECT * FROM sprint WHERE '" . $date_check . "' BETWEEN sprint_start_date AND sprint_end_date";
+            $data = Yii::app()->db->createCommand($sql)->queryRow();
+            if ($data) {
+                $found = true;
+                $this->addError($attribute, 'The date sprint is conflict with sprint : ' . $data['sprint_name'] . ' and the date is between : ' .
+                        $data['sprint_start_date'] . ' to ' . $data['sprint_end_date']);
+            } else {
+                $start_date->add($plus_one_day);
+            }
+        }
+    }
+
+    /**
+     * fungsi buat update status card melalui kanban
+     * @param Int $task_id 
+     * @param String $status status dari ajax post
+     */
+    public function updateKanbanStatus($task_id, $status) {
+        $data_update = array();
+        switch ($status) {
+            case 'start' :
+                $data_update = array('task_is_start' => 0,
+                                     'task_is_end' => 0);
+                break;
+            case 'on progress' :
+                $data_update = array('task_is_start' => 1,
+                                     'task_is_end' => 0,
+                                     'task_start_datetime' => date('Y-m-d H:i:s'));
+                break;
+            case 'end' :
+                $data_update = array('task_is_start' => 1,
+                                     'task_is_end' => 1,
+                                    'task_end_datetime' => date('Y-m-d H:i:s'));
+                break;
+            default :
+                $data_update = array('task_is_start' => 0,
+                                     'task_is_end' => 0,
+                                     'task_end_datetime' => date('Y-m-d H:i:s'));
+                break;
+        }
+        return Yii::app()->db->createCommand()->update('task', $data_update, 'task_id = :task_id', array(':task_id' => $task_id));
     }
 
 }

@@ -6,7 +6,7 @@ if (isset($task_color)) {
     $task_color_style = html::generateGradien($task_color);
 }
 ?>
-<div class="block span3 draggable card-block">
+<div class="block span3 draggable card-block" value="<?php echo $row['task_id']; ?>">
     <span class="card-hidden" style="display: none;"><?php echo $row['task_id']; ?></span>
     <span class="card-hidden-point" style="display: none;"><?php echo $row['task_point']; ?></span>
     <div class="<?php echo $is_draggable;?>navbar navbar-inner block-header card-header" style="background-color: #<?php echo $task_color; ?>;">

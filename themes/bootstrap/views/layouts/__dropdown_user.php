@@ -23,7 +23,7 @@ if (is_readable(Yii::getPathOfAlias('webroot') . '/files/images/user/' . $this->
                          <a tabindex="-1" href="<?php echo $this->createUrl('/project/admin'); ?>">Project</a>
                     </li>
                      <li>
-                         <a tabindex="-1" href="<?php echo $this->createUrl('/task/admin'); ?>">Task</a>
+                         <a tabindex="-1" href="<?php echo $this->createUrl('/task/list'); ?>">Task</a>
                     </li>
                 </ul>
             </li>

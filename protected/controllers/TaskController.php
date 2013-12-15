@@ -27,6 +27,7 @@ class TaskController extends adminController {
             if ($task->validate()) {
                 $task->task_project_id = $project_id;
                 $task->task_create_datetime = date("Y-m-d H:i:s");
+                $task->task_creator_user_id = $this->admin_auth->user_id;
                 $task->save(false);
                 //upload multiple file
                 Yii::import('application.helper.FileHelper');
@@ -38,6 +39,8 @@ class TaskController extends adminController {
                 }
                 //$this->redirect(array('view', 'id' => $model->project_id));
                 Yii::app()->user->setFlash('success', 'Succed adding task');
+                $url = $this->createUrl('/project/view', array('id' => $project_id));
+                $this->redirect($url);
             }
         }
         $this->render('task_create', array('data_project' => $data_project,
@@ -71,6 +74,8 @@ class TaskController extends adminController {
                 }
                 //$this->redirect(array('view', 'id' => $model->project_id));
                 Yii::app()->user->setFlash('success', 'Succed adding task');
+                $url = $this->createUrl('/project/view', array('id' => $task->taskProject->project_id));
+                $this->redirect($url);
             }
         }
         //ambil semua filenya 
@@ -124,7 +129,8 @@ class TaskController extends adminController {
                 }
                 //$this->redirect(array('view', 'id' => $model->project_id));
                 Yii::app()->user->setFlash('success', 'Succed adding comment');
-                $this->redirect('/task/view/', array('task_id' => $task_id));
+                $url = $this->createUrl('/task/view', array('task_id' => $task_id));
+                $this->redirect($url);
             }
         }
         //ambil task filenya

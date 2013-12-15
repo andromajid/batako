@@ -30,7 +30,7 @@ class adminController extends CController {
         $data_password = $this->admin_auth->checkPassword();
         if ($data_sesi['error'] || $data_password['error']) {
             Yii::app()->user->setFlash('error', isset($data_password['message']) ? $data_password['message'] : $data_sesi['message']);
-            $this->redirect(array('/admin/login'));
+            $this->redirect(array('/site/login'));
         }
     }
 

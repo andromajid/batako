@@ -42,14 +42,16 @@ jQuery(".action-user button").bind("click", function() {
     });
 });    
 ' . "
-    jQuery('.card-place').sortable({  
+    jQuery('.card-place').sortable({
     connectWith: '.card-place',  
     handle: '.is_draggable',  
     cursor: 'move',  
     placeholder: 'placeholder',  
     forcePlaceholderSize: true,  
     opacity: 0.4,  
-    stop: function(event, ui){  
+    stop: function(event, ui){ 
+        var card_task_id = ui.item.attr('value');
+        var card_status = ui.item.parent().attr('value');
         var total = 0;
         $(ui.item).find('.card-header').click();  
         //hitung poin
@@ -60,12 +62,24 @@ jQuery(".action-user button").bind("click", function() {
         });
         //update ke containernya
         jQuery('.pull-right .badge-info').html(total);
+        //update ke ajax-nya
+        jQuery.ajax({
+            url : '" . $this->createUrl('/sprint/update_kanban_progress') ." ',
+            data : {status : card_status, task_id : card_task_id},
+            type : \"post\",
+            dataType : \"json\",
+            success : function(data) {
+            if(data.error) {
+                alert(data.message);
+            } else {
+            }
+            }
+        });
     }  
 })  
 .disableSelection();  
 ");
-$link = CHtml::link('Update Sprint : ' . $sprint['sprint_name'], $this->createUrl('update', array('id' => $sprint['sprint_id'])), 
-                    array('class' => 'btn btn-primary span3 submit-sprint'));
+$link = CHtml::link('Update Sprint : ' . $sprint['sprint_name'], $this->createUrl('update', array('id' => $sprint['sprint_id'])), array('class' => 'btn btn-primary span3 submit-sprint'));
 
 $this->widget('zii.widgets.jui.CJuiSortable', array(
     // additional javascript options for the JUI Sortable plugin
@@ -85,7 +99,7 @@ foreach ($task_sprint as $row) {
 
             </div>
             <div class="block-content collapse in">
-                <?php  echo($link);?><span class="clearfix"></span><br />
+                <?php echo($link); ?><span class="clearfix"></span><br />
                 <table class="table table-bordered table-striped" style="width: 35%;">
                     <tr>
                         <td>Nama Sprint</td>
@@ -123,7 +137,7 @@ $task_project = $task_sprint;
 
                 </div>
             </div>
-            <div class="block-content collapse in card-place card-place-task">
+            <div class="block-content collapse in card-place card-place-task" value="start">
                 <?php if (is_array($task_project)): ?>
                     <?php foreach ($task_project as $row): ?>
                         <?php if ($row['task_is_start'] == '0' && $row['task_is_end'] == '0'): ?>
@@ -146,7 +160,7 @@ $task_project = $task_sprint;
 
                 </div>
             </div>
-            <div class="block-content collapse in card-place card-place-task">
+            <div class="block-content collapse in card-place card-place-task" value="on progress">
                 <?php if (is_array($task_project)): ?>
                     <?php foreach ($task_project as $row): ?>
                         <?php if ($row['task_is_start'] == '1' && $row['task_is_end'] == '0'): ?>
@@ -167,14 +181,14 @@ $task_project = $task_sprint;
 
                 </div>
             </div>
-            <div class="block-content collapse in card-place card-place-task">
+            <div class="block-content collapse in card-place card-place-task" value="end"> 
                 <?php if (is_array($task_project)): ?>
-                        <?php foreach ($task_project as $row): ?>
-                            <?php if ($row['task_is_start'] == '1' && $row['task_is_end'] == '1'): ?>
-                                <?php $this->renderPartial('__sprint_card', array('row' => $row)) ?>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                    <?php foreach ($task_project as $row): ?>
+                        <?php if ($row['task_is_start'] == '1' && $row['task_is_end'] == '1'): ?>
+                            <?php $this->renderPartial('__sprint_card', array('row' => $row)) ?>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </div>
         <!-- /block -->

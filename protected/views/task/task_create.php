@@ -92,7 +92,7 @@ Yii::app()->getClientScript()->registerScript('timepicker', '
     </div> 
     <div class="row">
         <?php echo $form->labelEx($model, 'task_task_type_id'); ?>
-<?php echo $form->dropDownList($model, 'task_task_type_id', CHtml::listData(task_type::model()->findAll(), 'task_type_id', 'task_type_name'), array('empty' => 'select task type')); ?>
+<?php echo $form->dropDownList($model, 'task_task_type_id', CHtml::listData(task_type::model()->findAll(), 'task_type_id', 'task_type_name')); ?>
     </div>
     <div class="row">
         <?php echo $form->labelEx($model, 'task_progress'); ?>

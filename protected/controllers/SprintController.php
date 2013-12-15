@@ -32,7 +32,7 @@ class SprintController extends adminController {
                 }
                 //berhasil nambah data sprint
                 Yii::app()->user->setFlash('success', 'Sprint Berhasil ditambah');
-                $this->redirect(array('/sprint/view', 'id' => $sprint->sprint_id));
+                $this->redirect(array('/sprint/kanban', 'id' => $sprint->sprint_id));
             }
         }
         $task_project = task::model()->getAllTask();
@@ -59,6 +59,9 @@ class SprintController extends adminController {
                             'sprint_sprint_id' => $sprint->sprint_id));
                     }
                 }
+                Yii::app()->user->setFlash('success', 'Succeed updating sprint');
+                $url = $this->createUrl('/sprint/kanban', array('id' => $id));
+                $this->redirect($url);
             }
         }
         $task_sprint = task::model()->getAllTaskBySprintId($id);
@@ -162,8 +165,19 @@ class SprintController extends adminController {
         }
         return $new_project;
     }
-
-
+    /**
+     * action buat update task progress
+     */
+    public function actionUpdate_kanban_progress() {
+       $data_feedback = array('error' => false);
+       $feedback = sprint::model()->updateKanbanStatus($_POST['task_id'], $_POST['status']);
+       if(!$feedback) {
+           $data_feedback = array('error' => true,
+                                  'message' => 'error');
+       }
+       echo CJavaScript::jsonEncode($data_feedback);
+       Yii::app()->end();
+    }
 }
 
 ?>

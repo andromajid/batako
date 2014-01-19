@@ -25,6 +25,9 @@ if (is_readable(Yii::getPathOfAlias('webroot') . '/files/images/user/' . $this->
                      <li>
                          <a tabindex="-1" href="<?php echo $this->createUrl('/task/list'); ?>">Task</a>
                     </li>
+                    <li>
+                         <a tabindex="-1" href="<?php echo $this->createUrl('/task_type/admin'); ?>">Task Type</a>
+                    </li>
                 </ul>
             </li>
             <li>

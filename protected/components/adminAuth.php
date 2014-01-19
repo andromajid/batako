@@ -122,7 +122,7 @@ class adminAuth {
         //ambil con_action_id
         $con_action_id = dbHelper::getOne('con_action_id', 'con_action', 'con_action_data = \'' . $action_name . '\'');
         if ($con_action_id) {
-            $cek = dbHelper::getOne('con_action_user_role_user_role_id', 'con_action_user_role', 'con_action_user_role_user_role_id = ' . $this->user_id . ' AND con_action_user_role_con_action_id = ' . $con_action_id);
+            $cek = dbHelper::getOne('con_action_user_role_user_role_id', 'con_action_user_role', 'con_action_user_role_user_role_id = ' . $this->user_role_user_role_id . ' AND con_action_user_role_con_action_id = ' . $con_action_id);
             if (!$cek) {
                 return array('error' => true, 'message' => $action_name . ' tidak berhak akses');
             }
